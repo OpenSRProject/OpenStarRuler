@@ -1,5 +1,0 @@
-Status: Verdant
-	Visible To: Nobody
-
-	ReplacesCities(10000)
-	ModPressureCapMult(-1)

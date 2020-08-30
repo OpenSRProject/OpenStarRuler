@@ -1,7 +1,0 @@
-Status: EvtClique
-	Name: #STATUS_EVT_CLIQUE
-	Description: #STATUS_EVT_CLIQUE_DESC
-	Icon: emp_portrait_mono
-
-	AddResource(Labor, 5)
-	ModBuildingConstructRate(+1)

@@ -1,9 +1,0 @@
-Building: AncientRuins
-	Name: #BLD_ANCIENT_RUINS
-	Description: #BLD_ANCIENT_RUINS_DESC
-	Sprite: AncientRuin
-
-	Size: 4x3
-
-	CannotBuildManually()
-	CannotRemove()

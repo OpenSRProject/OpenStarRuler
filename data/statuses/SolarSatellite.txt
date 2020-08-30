@@ -1,4 +1,0 @@
-Status: SolarSatellite
-	Visible To: Nobody
-
-	ImproveNativeResourcePressure(1)

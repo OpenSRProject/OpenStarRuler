@@ -1,4 +1,0 @@
-Template: var/Thrust
-	Modifier: ThrustFactor(factor)
-		Thrust := Thrust * factor
-

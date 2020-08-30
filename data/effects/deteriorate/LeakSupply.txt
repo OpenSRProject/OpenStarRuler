@@ -1,4 +1,0 @@
-Effect: LeakSupply
-	Value: LeakPctPerSec
-
-	Tick: effects::LeakSupply

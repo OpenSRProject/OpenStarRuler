@@ -1,5 +1,0 @@
-Status: RingHabitat
-	Visible To: Nobody
-	
-	AddMaxPopulation(2)
-	OnEnable(GivePopulation(2))

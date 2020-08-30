@@ -1,9 +1,0 @@
-//Trait: Revolutionaries
-//	Name: #TRAIT_REVOLUTIONARIES
-//	Description: #TRAIT_REVOLUTIONARIES_DESC
-//	Category: Foundation
-
-//	Color: #aaffaa
-//	Icon: Revolutionaries
-
-//	Costs Points: 1

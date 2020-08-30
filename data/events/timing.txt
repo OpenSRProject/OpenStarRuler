@@ -1,1 +1,0 @@
-void setGameSpeed(double speed) -> server::timing::setGameSpeed

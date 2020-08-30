@@ -1,4 +1,0 @@
-PlanetType: Ringworld
-	Icon: PlanetType::14
-	DistantIcon: DistantPlanetType::14
-	Artificial: True

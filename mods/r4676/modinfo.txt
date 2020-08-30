@@ -1,4 +1,0 @@
-Name: r4676
-	Base Mod: True
-	Derives From: base
-	Listed: False

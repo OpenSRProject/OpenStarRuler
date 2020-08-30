@@ -1,6 +1,0 @@
-Status: Warhead
-	Name: #STATUS_WARHEAD
-	Description: #STATUS_WARHEAD_DESC
-	Icon: WarheadStored
-	Visible To: Everybody
-	Collapses: True

@@ -1,5 +1,0 @@
-Status: AncientProduce
-	Visible To: Nobody
-	Collapses: True
-
-	ProduceNativePressurePct(Per Stack = 0.1)

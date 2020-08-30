@@ -1,6 +1,0 @@
-Status: PirateShip
-	Name: #STATUS_PIRATESHIP
-	Description: #STATUS_PIRATESHIP_DESC
-	Icon: StatusWar * #ff0000
-
-	piracy::PirateStatus()

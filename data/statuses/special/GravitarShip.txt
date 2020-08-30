@@ -1,6 +1,0 @@
-Status: GravitarShip
-	Name: #STATUS_GRAVITARSHIP
-	Description: #STATUS_GRAVITARSHIP_DESC
-	Icon: ResourceIcon::2
-
-	artifact_seeding::GravitarShip()

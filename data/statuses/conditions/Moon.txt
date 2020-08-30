@@ -1,7 +1,0 @@
-Status: Moon
-	Name: #COND_MOON
-	Description: #COND_MOON_DESC
-	Collapses: True
-	Visible To: Global
-
-	Icon: PlanetType::4

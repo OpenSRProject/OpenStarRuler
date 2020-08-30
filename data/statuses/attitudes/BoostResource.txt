@@ -1,4 +1,0 @@
-Status: BoostResource
-	Visible To: Nobody
-
-	ImproveNativeResourcePressure(2)

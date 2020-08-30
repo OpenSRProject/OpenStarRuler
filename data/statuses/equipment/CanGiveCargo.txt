@@ -1,4 +1,0 @@
-Status: CanGiveCargo
-	Visible To: Nobody
-	Unique: True
-	GrantAbility(TransferCargo)

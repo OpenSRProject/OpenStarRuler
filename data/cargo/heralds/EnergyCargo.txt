@@ -1,4 +1,0 @@
-Cargo: EnergyCargo
-	Name: #ENERGY_UNITS
-	Description: #ENERGY_UNITS_DESC
-	Icon: CargoIcons::0

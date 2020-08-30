@@ -1,4 +1,0 @@
-Status: Expire
-	Visible To: Nobody
-
-	OnDisable(Destroy())

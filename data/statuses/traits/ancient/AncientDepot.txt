@@ -1,5 +1,0 @@
-Status: AncientDepot
-	Visible To: Nobody
-
-	AddLaborStorage(100)
-	AddDefenseReserve(10)

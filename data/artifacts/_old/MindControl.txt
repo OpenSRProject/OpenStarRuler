@@ -1,5 +1,0 @@
-Artifact: MindControl
-	Name: #ART_MIND_CONTROL
-	Frequency: 0
-
-	Ability: Enslave

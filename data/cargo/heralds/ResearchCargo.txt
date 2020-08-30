@@ -1,4 +1,0 @@
-Cargo: ResearchCargo
-	Name: #RESEARCH_UNITS
-	Description: #RESEARCH_UNITS_DESC
-	Icon: CargoIcons::2
