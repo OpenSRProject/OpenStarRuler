@@ -1,4 +1,4 @@
-name: Windows Build
+name: Build
 
 on: [push]
 
@@ -12,7 +12,8 @@ env:
   BUILD_CONFIGURATION: Non-Steam Release
 
 jobs:
-  build:
+  windows:
+    name: Windows buikd
     runs-on: windows-2016
 
     steps:
