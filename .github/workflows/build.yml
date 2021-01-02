@@ -2,18 +2,18 @@ name: Build
 
 on: [push]
 
-env:
-  # Path to the solution file relative to the root of the project.
-  SOLUTION_FILE_PATH: source/msvc/Star Ruler 2/Star Ruler 2.sln
-
-  # Configuration type to build.
-  # You can convert this to a build matrix if you need coverage of multiple configuration types.
-  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-  BUILD_CONFIGURATION: Non-Steam Release
-
 jobs:
   windows:
-    name: Windows buikd
+    env:
+      # Path to the solution file relative to the root of the project.
+      SOLUTION_FILE_PATH: source/msvc/Star Ruler 2/Star Ruler 2.sln
+
+      # Configuration type to build.
+      # You can convert this to a build matrix if you need coverage of multiple configuration types.
+      # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+      BUILD_CONFIGURATION: Non-Steam Release
+
+    name: Windows build
     runs-on: windows-2016
 
     steps:
@@ -39,4 +39,28 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
+        name: binaries.zip
         path: binaries.zip
+
+  deploy:
+    name: Deployment
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: binaries.zip
+    
+    - name: Update nightly release
+      uses: WebFreak001/deploy-nightly@v1.1.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
+      with:
+        upload_url: https://uploads.github.com/repos/OpenSRProject/OpenStarRuler/releases/35747870/assets{?name,label}
+        release_id: 35747870
+        asset_path: ./binaries.zip
+        asset_name: OpenStarRuler-binaries-windows-nightly-$$.zip
+        asset_content_type: application/zip # required by GitHub API
