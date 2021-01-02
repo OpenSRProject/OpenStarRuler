@@ -46,6 +46,9 @@ jobs:
     name: Deployment
     runs-on: ubuntu-latest
 
+    needs:
+    - windows
+
     steps:
     - uses: actions/checkout@v2
 
