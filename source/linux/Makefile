@@ -35,10 +35,10 @@ else
 	CXXFLAGS += -DNDEBUG
 endif
 ifndef NLTO
-ifeq (,$(findstring g++, $(CXX)))
-	CXXFLAGS += -flto=6
-else
+ifneq (,$(findstring clang, $(shell $(CXX) --version)))
 	CXXFLAGS += -flto=thin
+else ifneq (,$(findstring gcc, $(shell $(CXX) --version)))
+	CXXFLAGS += -flto=6
 endif
 else
 	CXXFLAGS += -fno-lto
