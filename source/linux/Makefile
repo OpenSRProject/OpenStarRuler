@@ -35,7 +35,7 @@ else
 	CXXFLAGS += -DNDEBUG
 endif
 ifndef NLTO
-ifeq (,$(findstring g++, $(CC)))
+ifeq (,$(findstring g++, $(CXX)))
 	CXXFLAGS += -flto=6
 else
 	CXXFLAGS += -flto=thin
@@ -69,8 +69,8 @@ BIN = StarRuler2.bin
 MS_BIN = MasterServer.bin
 SRCDIR = source/game
 
-ifndef CC
-	CC = g++
+ifndef CXX
+	CXX = g++
 endif
 
 CXXFLAGS += -std=c++11
@@ -312,18 +312,18 @@ master_server: $(BINDIR)/$(MS_BIN)
 #Dependency files to take care of header changes
 $(OBJDIR)/%.d: $(SRCDIR)/%.cpp
 	@mkdir -p $(dir $@)
-	@$(CC) $(CXXFLAGS) -MM -MT "$(@:.d=.o)" $< >> $@
+	@$(CXX) $(CXXFLAGS) -MM -MT "$(@:.d=.o)" $< >> $@
 
 #Object files are compiled separately
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(dir $@)
 	@echo $<
-	@$(CC) $(CXXFLAGS) $< -c -o $@
+	@$(CXX) $(CXXFLAGS) $< -c -o $@
 
 #Complete binary compile
 $(BINDIR)/$(BIN): makelibs $(OBJ_FILES) $(LIB_FILES) $(COPY_LIBS)
 	@mkdir -p $(BINDIR)
-	@$(CC) $(CXXFLAGS) $(LDFLAGS) $(OBJ_FILES) $(LIB_FILES) -o $@
+	@$(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJ_FILES) $(LIB_FILES) -o $@
 
 makelibs:
 	@mkdir -p $(BINDIR)
@@ -343,10 +343,10 @@ makelibs:
 
 $(BINDIR)/$(MS_BIN): $(OBJDIR)/master_server.o $(LIBDIR)/libnetwork.a $(LIBDIR)/libos.a
 	@mkdir -p $(BINDIR)
-	@$(CC) $(CXXFLAGS) -lstdc++ -lpthread -lm $^ -o $@
+	@$(CXX) $(CXXFLAGS) -lstdc++ -lpthread -lm $^ -o $@
 
 patcher: $(LIB_FILES)
-	@$(CC) $(CXXFLAGS) $(LDFLAGS) source/patcher/patcher/patcher.cpp $(LIB_FILES) -o $(BINDIR)/Patcher.bin
+	@$(CXX) $(CXXFLAGS) $(LDFLAGS) source/patcher/patcher/patcher.cpp $(LIB_FILES) -o $(BINDIR)/Patcher.bin
 
 version:
 	bash /source/linux/build.sh version
