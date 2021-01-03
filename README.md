@@ -7,8 +7,7 @@ the economy, field a military, influence galactic politics, and learn what you
 can about the universe.
 
 ## What is this?
-This repository contains the full source code needed to build Star Ruler 2, and
-all secondary scripts, data files and assets required to run it.
+This repository contains the full source code needed to build Star Ruler 2.
 
 Blind Mind Studios has been inactive for a few years now, so we decided to
 open-source the game as a whole and allow anyone interested in how its engine works
