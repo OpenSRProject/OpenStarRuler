@@ -54,7 +54,7 @@ jobs:
         name: binaries.zip
 
     - name: Update nightly Git tag
-      run: git tag -f nightly && git push --force nightly
+      run: git tag -f nightly && git push --force origin nightly
 
     - name: Update nightly release
       uses: WebFreak001/deploy-nightly@v1.1.0
