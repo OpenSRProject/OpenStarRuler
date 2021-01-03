@@ -46,10 +46,10 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install dependencies
-      runs: sudo apt update && sudo apt install cmake libpng-dev libglew-dev libogg-dev libfreetype6-dev libcurl4-openssl-dev libxrandr-dev libopenal-dev libvorbis-dev xorg-dev
+      run: sudo apt update && sudo apt install cmake libpng-dev libglew-dev libogg-dev libfreetype6-dev libcurl4-openssl-dev libxrandr-dev libopenal-dev libvorbis-dev xorg-dev
 
     - name: Build
-      runs: make -f source/linux/Makefile compile
+      run: make -f source/linux/Makefile compile
 
     - name: Pack ZIP artifact
       run: zip binaries.zip bin bin/lin64 bin/lin64/StarRuler2.bin credits.txt StarRuler2.sh COPYING sr2.png
