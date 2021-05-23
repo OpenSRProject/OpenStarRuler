@@ -104,7 +104,7 @@ ifeq ($(UNAME), Darwin)
 
 	CXXFLAGS += -I/usr/local/Cellar/glew/1.10.0/include
 	LDFLAGS += -L/usr/local/Cellar/glew/1.10.0/lib
-	
+
 	CXXFLAGS += -framework OpenGL -framework Cocoa -framework IOKit
 	CXXFLAGS += -framework OpenAL
 
@@ -323,7 +323,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 #Complete binary compile
 $(BINDIR)/$(BIN): makelibs $(OBJ_FILES) $(LIB_FILES) $(COPY_LIBS)
 	@mkdir -p $(BINDIR)
-	@$(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJ_FILES) $(LIB_FILES) -o $@
+	@$(CXX) $(CXXFLAGS) $(OBJ_FILES) $(LIB_FILES) $(LDFLAGS) -o $@
 
 makelibs:
 	@mkdir -p $(BINDIR)
