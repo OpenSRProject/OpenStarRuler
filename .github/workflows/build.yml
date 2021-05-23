@@ -29,14 +29,14 @@ jobs:
       run: "msbuild /m \"/p:Configuration=${{env.BUILD_CONFIGURATION}}\" \"${{env.SOLUTION_FILE_PATH}}\""
 
     - name: Pack ZIP artifact
-      run: "Compress-Archive -Path bin,credits.txt,\"Star Ruler 2.exe\",COPYING,sr2.ico -DestinationPath binaries.zip"
+      run: "Compress-Archive -Path bin,credits.txt,\"Star Ruler 2.exe\",COPYING,sr2.ico -DestinationPath binaries-windows.zip"
       shell: powershell
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
         name: binaries-windows.zip
-        path: binaries.zip
+        path: binaries-windows.zip
 
   linux:
     name: Linux build
@@ -52,13 +52,13 @@ jobs:
       run: make -f source/linux/Makefile compile
 
     - name: Pack ZIP artifact
-      run: zip binaries.zip bin bin/lin64 bin/lin64/StarRuler2.bin credits.txt StarRuler2.sh COPYING sr2.png
+      run: zip binaries-linux.zip bin bin/lin64 bin/lin64/StarRuler2.bin credits.txt StarRuler2.sh COPYING sr2.png
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
         name: binaries-linux.zip
-        path: binaries.zip
+        path: binaries-linux.zip
 
   deploy:
     name: Deployment
