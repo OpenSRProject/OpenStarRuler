@@ -13,3 +13,5 @@
 *.sdf
 *.db-shm
 *.db-wal
+*.iobj
+*.ipdb
