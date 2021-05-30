@@ -30,7 +30,7 @@ Directory' configuration property is set to ../../..
 ### Building on Linux
 The equivalent launcher on linux is StarRuler2.sh. To build the binary files on linux,
 make sure your working directory is set to the main directory (the one with StarRuler2.sh in it),
-then run `make -f source/linux/Makefile compile` to compile the binary.
+then run `make` to compile the binary.
 
 Afterward, run the `StarRuler2.sh` shell script to start the game.
 

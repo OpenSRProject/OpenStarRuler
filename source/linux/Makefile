@@ -304,6 +304,10 @@ CPP_FILES = $(addprefix $(SRCDIR)/, $(SOURCES))
 OBJ_FILES = $(addprefix $(OBJDIR)/, $(SOURCES:.cpp=.o))
 DEP_FILES = $(addprefix $(OBJDIR)/, $(SOURCES:.cpp=.d))
 
+.PHONY: compile master_server makelibs patcher version clean_angelscript angelscript clean_glfw glfw clean_sound sound clean_as_addons as_addons clean_libircclient libircclient clean_os os clean_util util clean_network network clean_code clean
+
+compile:
+
 -include $(DEP_FILES)
 
 compile: $(DEP_FILES) $(BINDIR)/$(BIN)
