@@ -15,3 +15,5 @@
 *.db-wal
 *.iobj
 *.ipdb
+*.o
+*.d
