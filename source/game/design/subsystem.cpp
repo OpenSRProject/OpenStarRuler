@@ -390,7 +390,6 @@ struct TemplateBlock {
 };
 
 bool conditionMatches(const SubsystemDef* cur, std::vector<std::pair<int,std::string>>& conditions) {
-	bool passesAll = true;
 	foreach(c, conditions) {
 		int type = c->first;
 		bool negation = false;
@@ -458,14 +457,14 @@ bool conditionMatches(const SubsystemDef* cur, std::vector<std::pair<int,std::st
 
 		if(!negation) {
 			if(!pass)
-				passesAll = false;
+				return false;
 		}
 		else {
 			if(pass)
-				passesAll = false;
+				return false;
 		}
 	}
-	return passesAll;
+	return true;
 }
 
 void parseConditions(const std::string& value, std::vector<std::pair<int,std::string>>& conditions) {
