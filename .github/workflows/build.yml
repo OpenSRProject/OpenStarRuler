@@ -14,13 +14,13 @@ jobs:
       BUILD_CONFIGURATION: Non-Steam Release
 
     name: Windows build
-    runs-on: windows-2016
+    runs-on: windows-2019
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v1.1
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
@@ -33,7 +33,7 @@ jobs:
       shell: powershell
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: binaries-windows.zip
         path: binaries-windows.zip
@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Install dependencies
       run: sudo apt update && sudo apt install cmake libpng-dev libglew-dev libogg-dev libfreetype6-dev libcurl4-openssl-dev libxrandr-dev libopenal-dev libvorbis-dev xorg-dev
@@ -55,7 +55,7 @@ jobs:
       run: zip binaries-linux.zip bin bin/lin64 bin/lin64/StarRuler2.bin credits.txt StarRuler2.sh COPYING sr2.png
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: binaries-linux.zip
         path: binaries-linux.zip
@@ -70,15 +70,15 @@ jobs:
     - linux
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Download Windows artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: binaries-windows.zip
 
     - name: Download Linux artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: binaries-linux.zip
 
