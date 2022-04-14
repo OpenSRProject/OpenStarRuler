@@ -17,3 +17,14 @@
 *.ipdb
 *.o
 *.d
+*.exp
+*.recipe
+*.FileListAbsolute.txt
+/mods
+/scripts
+/locales
+/data
+/maps
+shipsets.txt
+patcher.exe
+sound*.dll

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2035
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32407.337
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Star Ruler 2", "Star Ruler 2.vcxproj", "{50CA85BE-6640-4824-8CB6-9D65F77518F6}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -46,6 +46,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libircclient", "..\..\libircclient\libircclient.vcxproj", "{ABEA2C04-40F0-4D98-9191-A026E1D0DF07}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "patcher", "..\..\patcher\patcher\patcher.vcxproj", "{0ADCAA9F-2998-49CA-A58C-28D11046963F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3667F0B1-3E26-407C-841B-9FA2E554CB43} = {3667F0B1-3E26-407C-841B-9FA2E554CB43}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,14 +88,14 @@ Global
 		{A1E1942C-36D2-4824-9ECB-B4727543E958}.Debug|x64.Build.0 = Debug|x64
 		{A1E1942C-36D2-4824-9ECB-B4727543E958}.Non-Steam Release|x64.ActiveCfg = Release|x64
 		{A1E1942C-36D2-4824-9ECB-B4727543E958}.Non-Steam Release|x64.Build.0 = Release|x64
-		{93B31A9C-7169-47CA-80DB-CF3BB398291E}.Debug|x64.ActiveCfg = Debug|Win32
-		{93B31A9C-7169-47CA-80DB-CF3BB398291E}.Non-Steam Release|x64.ActiveCfg = Release|Win32
+		{93B31A9C-7169-47CA-80DB-CF3BB398291E}.Debug|x64.ActiveCfg = Debug|x64
+		{93B31A9C-7169-47CA-80DB-CF3BB398291E}.Non-Steam Release|x64.ActiveCfg = Release|x64
 		{ABEA2C04-40F0-4D98-9191-A026E1D0DF07}.Debug|x64.ActiveCfg = Debug|x64
 		{ABEA2C04-40F0-4D98-9191-A026E1D0DF07}.Debug|x64.Build.0 = Debug|x64
 		{ABEA2C04-40F0-4D98-9191-A026E1D0DF07}.Non-Steam Release|x64.ActiveCfg = Release|x64
 		{ABEA2C04-40F0-4D98-9191-A026E1D0DF07}.Non-Steam Release|x64.Build.0 = Release|x64
-		{0ADCAA9F-2998-49CA-A58C-28D11046963F}.Debug|x64.ActiveCfg = Debug|Win32
-		{0ADCAA9F-2998-49CA-A58C-28D11046963F}.Non-Steam Release|x64.ActiveCfg = Release|Win32
+		{0ADCAA9F-2998-49CA-A58C-28D11046963F}.Debug|x64.ActiveCfg = Debug|x64
+		{0ADCAA9F-2998-49CA-A58C-28D11046963F}.Non-Steam Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

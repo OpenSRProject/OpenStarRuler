@@ -57,6 +57,9 @@
  #define WINVER 0x0501
 #endif
 
+#pragma comment(lib, "User32.Lib")
+#pragma comment(lib, "Gdi32.Lib")
+
 #include <windows.h>
 #include <mmsystem.h>
 #include <dbt.h>

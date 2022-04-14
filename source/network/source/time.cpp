@@ -1,6 +1,7 @@
 #include <network/time.h>
 
 #ifdef _MSC_VER
+#pragma comment(lib, "WinMM.Lib")
 #include <Windows.h>
 #endif
 

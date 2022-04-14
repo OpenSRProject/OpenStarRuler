@@ -2,6 +2,7 @@
 #include "threads.h"
 
 #ifdef _MSC_VER
+#pragma comment(lib, "WS2_32.Lib")
 #include <WinSock2.h>
 #include <ws2def.h>
 #include <ws2ipdef.h>

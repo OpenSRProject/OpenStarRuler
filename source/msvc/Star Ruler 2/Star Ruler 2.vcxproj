@@ -1,33 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug Scripts|Win32">
-      <Configuration>Debug Scripts</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug Scripts|x64">
       <Configuration>Debug Scripts</Configuration>
       <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Non-Steam Release|Win32">
-      <Configuration>Non-Steam Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Non-Steam Release|x64">
       <Configuration>Non-Steam Release</Configuration>
       <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
@@ -35,82 +19,35 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
+    <ConfigurationType>Application</ConfigurationType>
     <ProjectGuid>{50CA85BE-6640-4824-8CB6-9D65F77518F6}</ProjectGuid>
     <RootNamespace>StarRuler2</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Scripts|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Scripts|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Non-Steam Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Non-Steam Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Scripts|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Scripts|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Non-Steam Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
@@ -120,14 +57,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\..\..\bin\win32\</OutDir>
-    <TargetName>$(ProjectName)_debug</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Scripts|Win32'">
-    <OutDir>$(SolutionDir)..\..\..\bin\win32\</OutDir>
-    <TargetName>$(ProjectName)_debug</TargetName>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)..\..\..\bin\win64\</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
@@ -136,60 +65,12 @@
     <OutDir>$(SolutionDir)..\..\..\bin\win64\</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\..\bin\win32\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Non-Steam Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\..\bin\win32\</OutDir>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)..\..\..\bin\win64\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Non-Steam Release|x64'">
     <OutDir>$(SolutionDir)..\..\..\bin\win64\</OutDir>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\game\;..\..\include\;..\..\include\glew\;..\..\glfw\include\;..\..\libpng\;..\..\angelscript\include\;..\..\freetype2\include\;..\..\sound\include\;..\..\as_addons\include\;..\..\os\include\;..\..\util\include\;..\..\network\include;..\..\rapidjson\include;..\..\libircclient\include;..\..\steam\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN_MODE;WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <MinimalRebuild>false</MinimalRebuild>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\win32\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Advapi32.lib;steam_api.lib;DbgHelp.lib;zdll.lib;opengl32.lib;glew32.lib;libpng.lib;glfw.lib;glu32.lib;freetype247.lib;Shlwapi.lib;Shell32.lib;angelscriptd.lib;as_addonsd.lib;soundd.lib;utild.lib;osd.lib;networkd.lib;libcurld.lib;libircclientd.lib</AdditionalDependencies>
-      <LargeAddressAware>true</LargeAddressAware>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Scripts|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\game\;..\..\include\;..\..\include\glew\;..\..\glfw\include\;..\..\libpng\;..\..\angelscript\include\;..\..\freetype2\include\;..\..\sound\include\;..\..\as_addons\include\;..\..\os\include\;..\..\util\include\;..\..\network\include;..\..\rapidjson\include;..\..\libircclient\include;..\..\steam\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN_MODE;WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <MinimalRebuild>false</MinimalRebuild>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\win32\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Advapi32.lib;steam_api.lib;DbgHelp.lib;zdll.lib;opengl32.lib;glew32.lib;libpng.lib;glfw.lib;glu32.lib;freetype247.lib;Shlwapi.lib;Shell32.lib;angelscriptd.lib;as_addonsd.lib;soundd.lib;utild.lib;osd.lib;networkd.lib</AdditionalDependencies>
-      <LargeAddressAware>true</LargeAddressAware>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -206,7 +87,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\lib\win64\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Advapi32.lib;DbgHelp.lib;zlibwapi.lib;opengl32.lib;glew32.lib;libpng64.lib;glfw64.lib;glu32.lib;freetype247_64.lib;Shlwapi.lib;Shell32.lib;angelscript64d.lib;as_addons64d.lib;sound64d.lib;util64d.lib;os64d.lib;network64d.lib;libcurl.lib;libircclient64d.lib;Ws2_32.lib;Wldap32.lib;Crypt32.lib</AdditionalDependencies>
+      <AdditionalDependencies>AdvAPI32.Lib;DbgHelp.Lib;OpenGL32.Lib;glew32.lib;libpng64.lib;glu32.lib;ShLwApi.Lib;shell32.lib;freetype247_64.lib;libcurl.lib;Wldap32.Lib;Crypt32.Lib;zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Scripts|x64'">
@@ -219,67 +100,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\lib\win64\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Advapi32.lib;steam_api64.lib;DbgHelp.lib;opengl32.lib;glew32.lib;libpng.lib;angelscript64.lib;glfw.lib;glu32.lib</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Full</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\game\;..\..\include\;..\..\include\glew\;..\..\glfw\include\;..\..\libpng\;..\..\angelscript\include\;..\..\freetype2\include\;..\..\sound\include\;..\..\as_addons\include\;..\..\os\include\;..\..\util\include\;..\..\network\include;..\..\rapidjson\include;..\..\libircclient\include;..\..\steam\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN_MODE;WIN32;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
-      <StringPooling>true</StringPooling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\win32\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Advapi32.lib;steam_api.lib;DbgHelp.lib;zdll.lib;opengl32.lib;glew32.lib;libpng.lib;glfw.lib;glu32.lib;freetype247.lib;Shlwapi.lib;Shell32.lib;angelscript.lib;as_addons.lib;sound.lib;util.lib;os.lib;network.lib;libcurl.lib;libircclient.lib</AdditionalDependencies>
-      <DataExecutionPrevention>true</DataExecutionPrevention>
-      <SubSystem>
-      </SubSystem>
-      <EntryPointSymbol>
-      </EntryPointSymbol>
-      <LargeAddressAware>true</LargeAddressAware>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Non-Steam Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Full</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\game\;..\..\include\;..\..\include\glew\;..\..\glfw\include\;..\..\libpng\;..\..\angelscript\include\;..\..\freetype2\include\;..\..\sound\include\;..\..\as_addons\include\;..\..\os\include\;..\..\util\include\;..\..\network\include;..\..\rapidjson\include;..\..\libircclient\include;..\..\steam\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NSTEAM;NDEBUG;WIN_MODE;WIN32;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
-      <StringPooling>true</StringPooling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\win32\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Advapi32.lib;DbgHelp.lib;zdll.lib;opengl32.lib;glew32.lib;libpng.lib;glfw.lib;glu32.lib;freetype247.lib;Shlwapi.lib;Shell32.lib;angelscript.lib;as_addons.lib;sound.lib;util.lib;os.lib;network.lib;libcurl.lib;libircclient.lib</AdditionalDependencies>
-      <DataExecutionPrevention>true</DataExecutionPrevention>
-      <SubSystem>
-      </SubSystem>
-      <EntryPointSymbol>
-      </EntryPointSymbol>
-      <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalDependencies>AdvAPI32.Lib;steam_api64.lib;DbgHelp.lib;opengl32.lib;glew32.lib;libpng.lib;angelscript64.lib;glfw.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -290,15 +111,18 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\..\game\;..\..\include\;..\..\include\glew\;..\..\glfw\include\;..\..\libpng\;..\..\angelscript\include\;..\..\freetype2\include\;..\..\sound\include\;..\..\as_addons\include\;..\..\os\include\;..\..\util\include\;..\..\network\include;..\..\rapidjson\include;..\..\libircclient\include;..\..\steam\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN_MODE;WIN32;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <StringPooling>true</StringPooling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\lib\win64\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Advapi32.lib;steam_api64.lib;DbgHelp.lib;zlibwapi.lib;opengl32.lib;glew32.lib;libpng64.lib;glfw64.lib;glu32.lib;Shlwapi.lib;Shell32.lib;freetype247_64.lib;angelscript64.lib;as_addons64.lib;sound64.lib;util64.lib;os64.lib;network64.lib;libcurl.lib;libircclient64.lib;Ws2_32.lib;Wldap32.lib;Crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AdvAPI32.Lib;steam_api64.lib;DbgHelp.Lib;OpenGL32.Lib;glew32.lib;libpng64.lib;glu32.lib;ShLwApi.Lib;shell32.lib;freetype247_64.lib;libcurl.lib;Wldap32.Lib;Crypt32.Lib;zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Non-Steam Release|x64'">
@@ -309,15 +133,18 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\..\game\;..\..\include\;..\..\include\glew\;..\..\glfw\include\;..\..\libpng\;..\..\angelscript\include\;..\..\freetype2\include\;..\..\sound\include\;..\..\as_addons\include\;..\..\os\include\;..\..\util\include\;..\..\network\include;..\..\rapidjson\include;..\..\libircclient\include;..\..\steam\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NSTEAM;NDEBUG;WIN_MODE;WIN32;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <StringPooling>true</StringPooling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\lib\win64\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Advapi32.lib;DbgHelp.lib;zlibwapi.lib;opengl32.lib;glew32.lib;libpng64.lib;glfw64.lib;glu32.lib;Shlwapi.lib;Shell32.lib;freetype247_64.lib;angelscript64.lib;as_addons64.lib;sound64.lib;util64.lib;os64.lib;network64.lib;libcurl.lib;libircclient64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AdvAPI32.Lib;DbgHelp.Lib;OpenGL32.Lib;glew32.lib;libpng64.lib;glu32.lib;ShLwApi.Lib;shell32.lib;freetype247_64.lib;libcurl.lib;Wldap32.Lib;Crypt32.Lib;zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -553,6 +380,32 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\sr2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\angelscript\projects\msvc10\angelscript.vcxproj">
+      <Project>{39e6af97-6ba3-4a72-8c61-bcebf214ebfd}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\as_addons\as_addons\as_addons.vcxproj">
+      <Project>{a70f9eb8-8109-4e35-847d-964a84d8bfe2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\glfw\GLFW.vcxproj">
+      <Project>{4da03747-f505-4a98-9124-03b3b73b9b3b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libircclient\libircclient.vcxproj">
+      <Project>{abea2c04-40f0-4d98-9191-a026e1d0df07}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\network\network\network.vcxproj">
+      <Project>{a1e1942c-36d2-4824-9ecb-b4727543e958}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\os\os\os.vcxproj">
+      <Project>{3667f0b1-3e26-407c-841b-9fa2e554cb43}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\sound\sound\sound.vcxproj">
+      <Project>{623a7e07-ee8e-4f21-a177-4ef75e70456e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\util\util\util.vcxproj">
+      <Project>{1d1c1d62-a273-4d60-a0ea-3c9032c408d8}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

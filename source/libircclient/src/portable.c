@@ -39,6 +39,7 @@
 		#endif
 	#endif 
 #else
+	#pragma comment(lib, "User32.Lib")
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
 	#include <windows.h>
