@@ -118,7 +118,7 @@ else
 endif
 
 #Libraries
-LDFLAGS += -lstdc++ -lGLEW -lpng -lz -lpthread
+LDFLAGS += -lstdc++ -lGLEW -lpng -lz -pthread
 LDFLAGS += -lm -lfreetype
 LDFLAGS += -lvorbisfile
 
@@ -304,9 +304,10 @@ CPP_FILES = $(addprefix $(SRCDIR)/, $(SOURCES))
 OBJ_FILES = $(addprefix $(OBJDIR)/, $(SOURCES:.cpp=.o))
 DEP_FILES = $(addprefix $(OBJDIR)/, $(SOURCES:.cpp=.d))
 
-.PHONY: compile master_server makelibs patcher version clean_angelscript angelscript clean_glfw glfw clean_sound sound clean_as_addons as_addons clean_libircclient libircclient clean_os os clean_util util clean_network network clean_code clean
+.PHONY: compile all master_server makelibs patcher version clean_angelscript angelscript clean_glfw glfw clean_sound sound clean_as_addons as_addons clean_libircclient libircclient clean_os os clean_util util clean_network network clean_code clean
 
 compile:
+all: compile master_server patcher
 
 -include $(DEP_FILES)
 
@@ -347,7 +348,7 @@ makelibs:
 
 $(BINDIR)/$(MS_BIN): $(OBJDIR)/master_server.o $(LIBDIR)/libnetwork.a $(LIBDIR)/libos.a
 	@mkdir -p $(BINDIR)
-	@$(CXX) $(CXXFLAGS) -lstdc++ -lpthread -lm $^ -o $@
+	@$(CXX) $(CXXFLAGS) -lstdc++ -pthread -lm $^ -o $@
 
 patcher: $(LIB_FILES)
 	@$(CXX) $(CXXFLAGS) $(LDFLAGS) source/patcher/patcher/patcher.cpp $(LIB_FILES) -o $(BINDIR)/Patcher.bin
