@@ -374,6 +374,7 @@
     <ClInclude Include="..\..\game\util\save_file.h" />
     <ClInclude Include="..\..\game\util\stat_history.h" />
     <ClInclude Include="..\..\game\util\threaded_loader.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Star Ruler 2.rc" />

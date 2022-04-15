@@ -756,6 +756,7 @@
     <ClInclude Include="..\..\game\render\ogex_loader.h">
       <Filter>render\Mesh formats</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Star Ruler 2.rc">
