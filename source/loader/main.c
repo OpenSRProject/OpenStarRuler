@@ -4,7 +4,7 @@ static inline __forceinline __declspec(allocator) wchar_t* wstrdup(const wchar_t
 	size_t i = 0;
 	while (_String[i] != 0)
 		i++;
-	wchar_t* ret = (wchar_t *)HeapAlloc(GetProcessHeap(), 0, i + 1);
+	wchar_t* ret = (wchar_t *)HeapAlloc(GetProcessHeap(), 0, sizeof(wchar_t) * (i + 1));
 	wsprintfW(ret, L"%s", _String);
 	return ret;
 }
