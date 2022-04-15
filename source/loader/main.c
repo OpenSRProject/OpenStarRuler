@@ -15,9 +15,14 @@ DWORD __stdcall mainCRTStartup(LPVOID p) {
 	wchar_t search = ' ';
 	if (cmdline[0] == '"') {
 		search = '"';
-	}
-	while (cmdline[0] != search && cmdline[0] != 0) {
 		cmdline++;
+	}
+	while (cmdline[0] != 0) {
+		cmdline++;
+		if (cmdline[0] == search) {
+			cmdline++;
+			break;
+		}
 	}
 	while (cmdline[0] == ' ') {
 		cmdline++;
