@@ -102,9 +102,6 @@ ifeq ($(UNAME), Darwin)
 	CXXFLAGS += -I/usr/local/Cellar/libpng/1.6.12/include
 	LDFLAGS += -L/usr/local/Cellar/libpng/1.6.12/lib
 
-	CXXFLAGS += -I/usr/local/Cellar/glew/1.10.0/include
-	LDFLAGS += -L/usr/local/Cellar/glew/1.10.0/lib
-
 	CXXFLAGS += -framework OpenGL -framework Cocoa -framework IOKit
 	CXXFLAGS += -framework OpenAL
 
@@ -118,7 +115,7 @@ else
 endif
 
 #Libraries
-LDFLAGS += -lstdc++ -lGLEW -lpng -lz -pthread
+LDFLAGS += -lstdc++ -lpng -lz -pthread
 LDFLAGS += -lm -lfreetype
 LDFLAGS += -lvorbisfile
 
@@ -134,7 +131,6 @@ LIB_FILES += $(LIBDIR)/libutil.a
 NOCOPYLIBS=1
 ifndef NOCOPYLIBS
 ifeq ($(UNAME), Darwin)
-	COPY_LIBS += lib/libGLEW.1.10.0.dylib
 	COPY_LIBS += opt/libpng/lib/libpng16.16.dylib
 	COPY_LIBS += opt/freetype/lib/libfreetype.6.dylib
 	COPY_LIBS += lib/gcc/x86_64-apple-darwin11.4.2/4.8.3/libstdc++.6.dylib
@@ -146,7 +142,6 @@ else
 	COPY_LIBS += libstdc++.so
 	COPY_LIBS += libpng.so
 	COPY_LIBS += libz.so
-	COPY_LIBS += libGLEW.so
 	COPY_LIBS += libGLU.so
 	COPY_LIBS += libfreetype.so
 	COPY_LIBS += libvorbisfile.so
