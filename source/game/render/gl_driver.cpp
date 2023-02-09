@@ -1,3 +1,4 @@
+#define GLAD_GL_IMPLEMENTATION
 #include "compat/misc.h"
 #include "compat/gl.h"
 #include "render/driver.h"
@@ -1095,10 +1096,10 @@ public:
 
 	bool init() {
 		//Check for sufficient opengl version
-		glewInit();
+		gladLoadGL(glfwGetProcAddress);
 
-		if(!GLEW_VERSION_2_1) {
-			fprintf(stderr, "Error: Requires OpenGL 2.1\n");
+		if(!GL_VERSION_3_0) {
+			fprintf(stderr, "Error: Requires OpenGL 3.0\n");
 			return false;
 		}
 
@@ -1123,9 +1124,9 @@ public:
 		float globalAmbient[4] = {0.175f, 0.175f, 0.175f, 0.f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
-		if(GLEW_ARB_seamless_cube_map)
+		if(GL_ARB_seamless_cube_map)
 			glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-		if(GLEW_EXT_direct_state_access)
+		if(GL_EXT_direct_state_access)
 			glDirectStateAccess = true;
 
 		//Support strange sizes of image
@@ -1140,7 +1141,7 @@ public:
 		print("OpenGL vendor '%s', renderer '%s'", vendorString, rendererString);
 		print("       version '%s'", versionString);
 		if(isIntelCard)
-			print("-- Using Intel mode. (%d)", GLEW_ARB_texture_storage);
+			print("-- Using Intel mode. (%d)", GL_ARB_texture_storage);
 
 		return true;
 	}
