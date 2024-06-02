@@ -87,8 +87,6 @@ jobs:
 
     - name: Update Windows nightly release
       uses: WebFreak001/deploy-nightly@v3.1.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
       with:
         upload_url: https://uploads.github.com/repos/OpenSRProject/OpenStarRuler/releases/35747870/assets{?name,label}
         release_id: 35747870
@@ -99,8 +97,6 @@ jobs:
 
     - name: Update Linux nightly release
       uses: WebFreak001/deploy-nightly@v3.1.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
       with:
         upload_url: https://uploads.github.com/repos/OpenSRProject/OpenStarRuler/releases/35747870/assets{?name,label}
         release_id: 35747870
