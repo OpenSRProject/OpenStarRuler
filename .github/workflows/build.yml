@@ -17,10 +17,10 @@ jobs:
     runs-on: windows-2019
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
@@ -33,7 +33,7 @@ jobs:
       shell: powershell
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: binaries-windows.zip
         path: binaries-windows.zip
@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install dependencies
       run: sudo apt update && sudo apt install cmake libpng-dev libglew-dev libogg-dev libfreetype6-dev libcurl4-openssl-dev libxrandr-dev libopenal-dev libvorbis-dev xorg-dev
@@ -55,7 +55,7 @@ jobs:
       run: zip binaries-linux.zip bin bin/lin64 bin/lin64/StarRuler2.bin credits.txt StarRuler2.sh COPYING sr2.png
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: binaries-linux.zip
         path: binaries-linux.zip
@@ -70,15 +70,15 @@ jobs:
     - linux
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Download Windows artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: binaries-windows.zip
 
     - name: Download Linux artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: binaries-linux.zip
 
@@ -86,7 +86,7 @@ jobs:
       run: git tag -f nightly && git push --force origin nightly
 
     - name: Update Windows nightly release
-      uses: WebFreak001/deploy-nightly@v1.1.0
+      uses: WebFreak001/deploy-nightly@v3.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
       with:
@@ -98,7 +98,7 @@ jobs:
         max_releases: 1
 
     - name: Update Linux nightly release
-      uses: WebFreak001/deploy-nightly@v1.1.0
+      uses: WebFreak001/deploy-nightly@v3.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
       with:
