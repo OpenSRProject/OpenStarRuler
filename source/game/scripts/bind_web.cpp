@@ -1,3 +1,4 @@
+#define RAPIDJSON_HAS_STDSTRING 1
 #include "rapidjson/document.h"
 #include "scripts/binds.h"
 #include "threads.h"
@@ -19,7 +20,7 @@ static const std::string WikiURI("http://wiki.starruler2.com/api.php?format=json
 static const std::string APIURI("http://api.starruler2.com/$1");
 
 static threads::threadreturn threadcall CurlThread(void*);
-static const std::string EMPTY_STRING("");
+static const std::string EMPTY_STRING{};
 struct WebData : AtomicRefCounted {
 	CURL* curl;
 	std::string uri;
@@ -47,7 +48,7 @@ struct WebData : AtomicRefCounted {
 		}
 
 		completed = false;
-		onPerform = perf;
+		onPerform = std::move(perf);
 		uri = URI;
 		threads::createThread(CurlThread, this);
 	}
@@ -524,8 +525,8 @@ bool intoMember(WebData& dat, rapidjson::Value*& node, const char* name) {
 		dat.errorStr = "Invalid json output. Not an object. "+toString(node->GetType());
 		return false;
 	}
-	rapidjson::Value::Member* mem = node->FindMember(name);
-	if(!mem) {
+	auto mem = node->FindMember(name);
+	if(mem == node->MemberEnd()) {
 		dat.errorStr = "Invalid json output. No member "+std::string(name);
 		return false;
 	}
@@ -569,7 +570,7 @@ void WikiJSON(WebData& dat) {
 		return;
 
 	rapidjson::Document doc;
-	doc.Parse<0>(dat.result.c_str());
+	doc.Parse<0>(dat.result);
 
 	rapidjson::Value* cursor = &doc;
 	if(!intoMember(dat, cursor, "query"))

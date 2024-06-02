@@ -1,3 +1,4 @@
+#define RAPIDJSON_HAS_STDSTRING 1
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/prettywriter.h"
@@ -15,6 +16,7 @@ namespace scripts {
 
 class StrOutputStream {
 public:
+	using Ch = char;
 	std::string value;
 
 	StrOutputStream() {}
@@ -22,13 +24,13 @@ public:
 	void Flush() {}
 };
 
-static Threaded(rapidjson::MemoryPoolAllocator<>*) allocator = 0;
+static Threaded(rapidjson::MemoryPoolAllocator<>*) allocator = nullptr;
 rapidjson::MemoryPoolAllocator<>& getAllocator() {
 	if(!allocator) {
 		allocator = new rapidjson::MemoryPoolAllocator<>();
 		addThreadCleanup([]() {
 			delete allocator;
-			allocator = 0;
+			allocator = nullptr;
 		});
 	}
 	return *allocator;
@@ -39,7 +41,7 @@ public:
 	rapidjson::Document doc;
 
 	void parse(const std::string& str) {
-		doc.Parse<0>(str.c_str());
+		doc.Parse<0>(str);
 	}
 
 	void readFile(const std::string& fname) {
@@ -47,7 +49,7 @@ public:
 			scripts::throwException("Cannot access file outside game or profile directories.");
 			return;
 		}
-		doc.Parse<0>(getFileContents(fname).c_str());
+		doc.Parse<0>(getFileContents(fname));
 	}
 
 	void writeFile(const std::string& fname, bool pretty) {
@@ -90,7 +92,7 @@ static std::string nodeString(rapidjson::Value* node) {
 		scripts::throwException("Node is not a string value.");
 		return "";
 	}
-	return std::string(node->GetString());
+	return node->GetString();
 }
 
 static int nodeBool(rapidjson::Value* node) {
@@ -159,11 +161,11 @@ static double nodeNumber(rapidjson::Value* node) {
 static rapidjson::Value* findMember(rapidjson::Value* node, const std::string& name) {
 	if(!node->IsObject()) {
 		scripts::throwException("Node is not an object.");
-		return 0;
+		return nullptr;
 	}
-	rapidjson::Value::Member* mem = node->FindMember(name.c_str());
-	if(!mem)
-		return 0;
+	auto mem = node->FindMember(name.c_str());
+	if(mem == node->MemberEnd())
+		return nullptr;
 	return &mem->value;
 }
 
@@ -173,19 +175,19 @@ static void removeMember(rapidjson::Value* node, const std::string& name) {
 		return;
 	}
 
-	node->RemoveMember(name.c_str());
+	node->RemoveMember(name);
 }
 
 static rapidjson::Value* getMember(rapidjson::Value* node, const std::string& name) {
 	if(!node->IsObject()) {
 		scripts::throwException("Node is not an object.");
-		return 0;
+		return nullptr;
 	}
-	rapidjson::Value::Member* mem = node->FindMember(name.c_str());
-	if(mem)
+	auto mem = node->FindMember(name);
+	if(mem != node->MemberEnd())
 		return &mem->value;
 	rapidjson::Value nullValue;
-	node->AddMember(name.c_str(), getAllocator(), nullValue, getAllocator());
+	node->AddMember(rapidjson::StringRef(name), nullValue, getAllocator());
 	return findMember(node, name);
 }
 
@@ -200,11 +202,11 @@ static void clearItems(rapidjson::Value* node) {
 static rapidjson::Value* getItem(rapidjson::Value* node, unsigned index) {
 	if(!node->IsArray()) {
 		scripts::throwException("Node is not an array.");
-		return 0;
+		return nullptr;
 	}
 	if(index >= node->Size()) {
 		scripts::throwException("Index out of bounds.");
-		return 0;
+		return nullptr;
 	}
 	return &(*node)[index];
 }
@@ -228,7 +230,7 @@ static void arrReserve(rapidjson::Value* node, unsigned amount) {
 static rapidjson::Value* arrPush(rapidjson::Value* node) {
 	if(!node->IsArray()) {
 		scripts::throwException("Node is not an array.");
-		return 0;
+		return nullptr;
 	}
 	rapidjson::Value nullValue;
 	node->PushBack(nullValue, getAllocator());
@@ -244,7 +246,7 @@ static void arrPop(rapidjson::Value* node) {
 }
 
 static rapidjson::Value* setString(rapidjson::Value* node, const std::string& value) {
-	node->SetString(value.c_str(), value.size(), getAllocator());
+	node->SetString(value, getAllocator());
 	return node;
 }
 
