@@ -21,6 +21,9 @@
 #  define WIN32_LEAN_AND_MEAN
 // defines APIENTRY, GL/gl.h includes it but Glad doesn't
 #  include <windows.h>
+// no my friend it isn't 1990
+#  undef near
+#  undef far
 #endif
 #if defined(__APPLE__) && defined(__MACH__)
 #  include <OpenGL/glu.h>
