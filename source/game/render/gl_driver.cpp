@@ -14,9 +14,20 @@
 #include "main/references.h"
 #include "main/tick.h"
 #include "main/logging.h"
-#include "matrix.h"
 #include "frustum.h"
-#include <algorithm>
+
+#ifdef _WIN32
+#  define NOMINMAX
+#  define WIN32_LEAN_AND_MEAN
+// defines APIENTRY, GL/gl.h includes it but Glad doesn't
+#  include <windows.h>
+#endif
+#if defined(__APPLE__) && defined(__MACH__)
+#  include <OpenGL/glu.h>
+#else
+#  include <GL/glu.h>
+#endif
+
 extern char lockText[1024];
 
 bool glDirectStateAccess = false;
