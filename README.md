@@ -40,7 +40,7 @@ make sure your working directory is set to the main directory (the root folder o
 then run `make` to compile the binaries.
 
 Several dependencies are required to build on Linux, including: libpng, zlib,
-GLEW, GLU, freetype2, libvorbisfile, libvorbis, libogg, libopenal, libbz2,
+GLU, freetype2, libvorbisfile, libvorbis, libogg, libopenal, libbz2,
 libXRandR, and libcurl.
 
 

@@ -17,7 +17,7 @@ bool useVertexArrays() {
 	if(vertArraysChecked)
 		return vertexArraysAvailable;
 
-	vertexArraysAvailable = GLEW_ARB_vertex_array_object;
+	vertexArraysAvailable = GL_ARB_vertex_array_object;
 	vertArraysChecked = true;
 	return vertexArraysAvailable;
 }

@@ -42,7 +42,7 @@ void createTexture(Image& image, bool mipmap) {
 		}
 	}
 
-	if(GLEW_ARB_texture_storage) {
+	if(GL_ARB_texture_storage) {
 		switch(image.format) {
 		case FMT_Grey:
 			format = GL_LUMINANCE8;
