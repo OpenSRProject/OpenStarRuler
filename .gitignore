@@ -2,7 +2,6 @@
 *.log
 *.pdb
 *.tlog
-*.log
 *.idb
 *.user
 *.db
@@ -25,6 +24,19 @@
 /locales
 /data
 /maps
+/obj
+/bin/lin64
+/source/angelscript/lib
+CMakeFiles
 shipsets.txt
 patcher.exe
 sound*.dll
+
+# clangd config
+compile_commands.json
+
+# clangd cache
+.cache
+
+# CLion
+.idea
