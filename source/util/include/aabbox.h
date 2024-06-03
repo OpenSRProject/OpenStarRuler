@@ -2,7 +2,6 @@
 #include "vec3.h"
 #include "line3d.h"
 #include "matrix.h"
-#include "sse.h"
 #include <algorithm>
 
 //Axis-Aligned Bounding Box
