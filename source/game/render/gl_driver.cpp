@@ -1112,7 +1112,7 @@ public:
 		//Check for sufficient opengl version
 		gladLoadGL(glfwGetProcAddress);
 
-		if(!GL_VERSION_3_0) {
+		if(!GLAD_GL_VERSION_3_0) {
 			fprintf(stderr, "Error: Requires OpenGL 3.0\n");
 			return false;
 		}
