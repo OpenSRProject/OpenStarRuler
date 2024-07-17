@@ -1,3 +1,4 @@
+#define GLAD_GL_IMPLEMENTATION
 #include "compat/misc.h"
 #include "compat/gl.h"
 #include "render/driver.h"
@@ -13,9 +14,23 @@
 #include "main/references.h"
 #include "main/tick.h"
 #include "main/logging.h"
-#include "matrix.h"
 #include "frustum.h"
-#include <algorithm>
+
+#ifdef _WIN32
+#  define NOMINMAX
+#  define WIN32_LEAN_AND_MEAN
+// defines APIENTRY, GL/gl.h includes it but Glad doesn't
+#  include <windows.h>
+// no my friend it isn't 1990
+#  undef near
+#  undef far
+#endif
+#if defined(__APPLE__) && defined(__MACH__)
+#  include <OpenGL/glu.h>
+#else
+#  include <GL/glu.h>
+#endif
+
 extern char lockText[1024];
 
 bool glDirectStateAccess = false;
@@ -1095,10 +1110,10 @@ public:
 
 	bool init() {
 		//Check for sufficient opengl version
-		glewInit();
+		gladLoadGL(glfwGetProcAddress);
 
-		if(!GLEW_VERSION_2_1) {
-			fprintf(stderr, "Error: Requires OpenGL 2.1\n");
+		if(!GLAD_GL_VERSION_3_0) {
+			fprintf(stderr, "Error: Requires OpenGL 3.0\n");
 			return false;
 		}
 
@@ -1123,9 +1138,9 @@ public:
 		float globalAmbient[4] = {0.175f, 0.175f, 0.175f, 0.f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
-		if(GLEW_ARB_seamless_cube_map)
+		if(GLAD_GL_ARB_seamless_cube_map)
 			glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-		if(GLEW_EXT_direct_state_access)
+		if(GLAD_GL_EXT_direct_state_access)
 			glDirectStateAccess = true;
 
 		//Support strange sizes of image
@@ -1140,7 +1155,7 @@ public:
 		print("OpenGL vendor '%s', renderer '%s'", vendorString, rendererString);
 		print("       version '%s'", versionString);
 		if(isIntelCard)
-			print("-- Using Intel mode. (%d)", GLEW_ARB_texture_storage);
+			print("-- Using Intel mode. (%d)", GLAD_GL_ARB_texture_storage);
 
 		return true;
 	}
