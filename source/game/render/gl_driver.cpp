@@ -1155,7 +1155,7 @@ public:
 		print("OpenGL vendor '%s', renderer '%s'", vendorString, rendererString);
 		print("       version '%s'", versionString);
 		if(isIntelCard)
-			print("-- Using Intel mode. (%d)", GL_ARB_texture_storage);
+			print("-- Using Intel mode. (%d)", GLAD_GL_ARB_texture_storage);
 
 		return true;
 	}
