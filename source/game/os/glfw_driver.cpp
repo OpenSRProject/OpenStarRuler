@@ -160,8 +160,9 @@ public:
 	void createWindow(WindowData& data) {
 		glfwWindowHint(GLFW_SAMPLES, data.aa_samples);
 		glfwWindowHint(GLFW_REFRESH_RATE, data.refreshRate);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, false);
 
 		GLFWmonitor* monitor = nullptr;
 		if(data.mode == WM_Fullscreen) {
@@ -207,10 +208,10 @@ public:
 
 		window = glfwCreateWindow(data.width, data.height, "Star Ruler 2", monitor, nullptr);
 
-		if(window == 0)
+		if(window == nullptr)
 			window = glfwCreateWindow(1024,768, "Star Ruler 2 - Error Creating Window", nullptr, nullptr);
 
-		if(window == 0) {
+		if(window == nullptr) {
 			error("Could not create window.");
 			return;
 		}
