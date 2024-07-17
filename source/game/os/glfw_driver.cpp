@@ -163,6 +163,7 @@ public:
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, false);
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
 		GLFWmonitor* monitor = nullptr;
 		if(data.mode == WM_Fullscreen) {
