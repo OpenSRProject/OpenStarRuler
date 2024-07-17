@@ -1138,9 +1138,9 @@ public:
 		float globalAmbient[4] = {0.175f, 0.175f, 0.175f, 0.f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
-		if(GL_ARB_seamless_cube_map)
+		if(GLAD_GL_ARB_seamless_cube_map)
 			glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-		if(GL_EXT_direct_state_access)
+		if(GLAD_GL_EXT_direct_state_access)
 			glDirectStateAccess = true;
 
 		//Support strange sizes of image
