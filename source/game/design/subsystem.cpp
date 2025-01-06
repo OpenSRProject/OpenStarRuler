@@ -605,27 +605,27 @@ void loadSubsystemDefinitions(const std::string& filename) {
 
 	sysHandler = new DataHandler();
 	DataHandler& handler = *sysHandler;
-	handler.defaultHandler([&](std::string& key, std::string& value) {
+	handler.defaultHandler([&handler](std::string& key, std::string& value) {
 		error(handler.position());
 		error("  Invalid line format.");
 	});
 
 	{
 		auto& templateBlock = handler.block("Template");
-		templateBlock.openBlock([&](std::string& value) -> bool {
+		templateBlock.openBlock([](std::string& value) -> bool {
 			temp = new TemplateBlock();
 			templates.push_back(temp);
 			parseConditions(value, temp->conditions);
 			return true;
 		});
 
-		templateBlock.lineHandler([&](std::string& line) {
+		templateBlock.lineHandler([](std::string& line) {
 			temp->lines.push_back(line);
 		});
 	}
 	{
 		auto& subsysBlock = handler.block("Subsystem");
-		subsysBlock.openBlock([&](std::string& id) -> bool {
+		subsysBlock.openBlock([](std::string& id) -> bool {
 			def = new SubsystemDef();
 			def->index = (int)subsystems.size();
 			def->id = id;
@@ -640,11 +640,11 @@ void loadSubsystemDefinitions(const std::string& filename) {
 			return true;
 		});
 
-		subsysBlock.closeBlock([&]() {
+		subsysBlock.closeBlock([] {
 			def = 0;
 		});
 
-		auto getVariable = [&](std::string& name) -> SubsystemDef::Variable& {
+		auto getVariable = [](std::string& name) -> SubsystemDef::Variable& {
 			bool dependent = false;
 			if(name.compare(0, 4, "out ") == 0) {
 				name = name.substr(4);
@@ -769,31 +769,31 @@ void loadSubsystemDefinitions(const std::string& filename) {
 			}
 		};
 
-		subsysBlock("Name", [&](std::string& value) {
+		subsysBlock("Name", [](std::string& value) {
 			def->name = devices.locale.localize(value);
 		});
 
-		subsysBlock("BaseColor", [&](std::string& value) {
+		subsysBlock("BaseColor", [](std::string& value) {
 			def->baseColor = toColor(value);
 		});
 
-		subsysBlock("TypeColor", [&](std::string& value) {
+		subsysBlock("TypeColor", [](std::string& value) {
 			def->typeColor = toColor(value);
 		});
 
-		subsysBlock("Elevation", [&](std::string& value) {
+		subsysBlock("Elevation", [](std::string& value) {
 			def->elevation = toNumber<int>(value);
 		});
 
-		subsysBlock("Description", [&](std::string& value) {
+		subsysBlock("Description", [](std::string& value) {
 			def->description = devices.locale.localize(value);
 		});
 
-		subsysBlock("Picture", [&](std::string& value) {
+		subsysBlock("Picture", [](std::string& value) {
 			def->picMat = value;
 		});
 
-		auto addTags = [&](std::vector<std::string>& tags) {
+		auto addTags = [](std::vector<std::string>& tags) {
 			foreach(t, tags) {
 				std::string tag, value;
 				auto pos = t->find(':');
@@ -824,7 +824,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 			}
 		};
 
-		subsysBlock("Tags", [&](std::string& value) {
+		subsysBlock("Tags", [addTags](std::string& value) {
 			std::vector<std::string> tags;
 			split(value, tags, ',', true);
 
@@ -842,7 +842,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 			def->fauxExterior = def->tags.find("FauxExterior") != def->tags.end();
 		});
 
-		subsysBlock("Hull", [&](std::string& value) {
+		subsysBlock("Hull", [addTags](std::string& value) {
 			std::vector<std::string> tags;
 			split(value, tags, ',', true);
 
@@ -853,19 +853,19 @@ void loadSubsystemDefinitions(const std::string& filename) {
 			addTags(tags);
 		});
 
-		subsysBlock("EvaluationOrder", [&](std::string& value) {
+		subsysBlock("EvaluationOrder", [](std::string& value) {
 			def->ordering = toNumber<int>(value);
 		});
 
-		subsysBlock("DamageOrder", [&](std::string& value) {
+		subsysBlock("DamageOrder", [](std::string& value) {
 			def->damageOrder = toNumber<int>(value);
 		});
 
-		subsysBlock("OnCheckErrors", [&](std::string& value) {
+		subsysBlock("OnCheckErrors", [](std::string& value) {
 			def->def_onCheckErrors = value;
 		});
 
-		subsysBlock("State", [&](std::string& value) {
+		subsysBlock("State", [&handler](std::string& value) {
 			std::vector<std::string> args;
 			split(value, args, '=', true);
 
@@ -890,32 +890,32 @@ void loadSubsystemDefinitions(const std::string& filename) {
 			def->states.push_back(desc);
 		});
 
-		subsysBlock("Hook", [&](std::string& value) {
+		subsysBlock("Hook", [](std::string& value) {
 			def->hooks.push_back(value);
 		});
 
-		subsysBlock("AddShipModifier", [&](std::string& value) {
+		subsysBlock("AddShipModifier", [](std::string& value) {
 			SubsystemDef::ShipModifier mod;
 			parseShipModifier(mod, value);
 
 			def->shipModifiers.push_back(mod);
 		});
 
-		subsysBlock("AddAdjacentModifier", [&](std::string& value) {
+		subsysBlock("AddAdjacentModifier", [](std::string& value) {
 			SubsystemDef::ShipModifier mod;
 			parseShipModifier(mod, value);
 
 			def->adjacentModifiers.push_back(mod);
 		});
 
-		subsysBlock("AddPostModifier", [&](std::string& value) {
+		subsysBlock("AddPostModifier", [](std::string& value) {
 			SubsystemDef::ShipModifier mod;
 			parseShipModifier(mod, value);
 
 			def->postModifiers.push_back(mod);
 		});
 
-		subsysBlock.defaultHandler([&](std::string& key, std::string& value) {
+		subsysBlock.defaultHandler([getVariable, &handler](std::string& key, std::string& value) {
 			if(!value.empty() && value[0] == '=') {
 				SubsystemDef::Variable& var = getVariable(key);
 				value = value.substr(1, value.size() - 1);
@@ -930,7 +930,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 
 		{
 			auto& defaultsBlock = subsysBlock.block("Defaults");
-			defaultsBlock.defaultHandler([&](std::string& key, std::string& value) {
+			defaultsBlock.defaultHandler([getVariable, &handler](std::string& key, std::string& value) {
 				if(!value.empty() && value[0] == '=') {
 					SubsystemDef::Variable& var = getVariable(key);
 					if(var.formula == 0 && var.str_formula.empty()) {
@@ -948,7 +948,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 
 		{
 			auto& modifyBlock = subsysBlock.block("Modifier");
-			modifyBlock.openBlock([&](std::string& value) -> bool {
+			modifyBlock.openBlock([&handler](std::string& value) -> bool {
 				std::vector<std::string> args;
 				std::string name;
 
@@ -984,17 +984,17 @@ void loadSubsystemDefinitions(const std::string& filename) {
 				return true;
 			});
 
-			modifyBlock("Stage", [&](std::string& value) {
+			modifyBlock("Stage", [](std::string& value) {
 				if(!stage)
 					return;
 				stage->stage = toNumber<short>(value) << 16 | modStage;
 			});
 
-			modifyBlock.closeBlock([&]() {
+			modifyBlock.closeBlock([]() {
 				stage = 0;
 			});
 
-			modifyBlock.defaultHandler([&](std::string& key, std::string& value) {
+			modifyBlock.defaultHandler([getVariable, &handler](std::string& key, std::string& value) {
 				if(!stage)
 					return;
 				if(!value.empty() && value[0] == '=') {
@@ -1043,7 +1043,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 
 		{
 			auto& moduleBlock = subsysBlock.block("Module");
-			moduleBlock.openBlock([&](std::string& value) -> bool {
+			moduleBlock.openBlock([&handler](std::string& value) -> bool {
 				auto it = def->moduleIndices.find(value);
 				if(it != def->moduleIndices.end()) {
 					if(inTemplate) {
@@ -1081,76 +1081,76 @@ void loadSubsystemDefinitions(const std::string& filename) {
 				return true;
 			});
 
-			moduleBlock.closeBlock([&]() {
+			moduleBlock.closeBlock([]() {
 				mod = 0;
 				stage = 0;
 			});
 
-			moduleBlock("Name", [&](std::string& value) {
+			moduleBlock("Name", [](std::string& value) {
 				mod->name = devices.locale.localize(value);
 			});
 
-			moduleBlock("Description", [&](std::string& value) {
+			moduleBlock("Description", [](std::string& value) {
 				mod->description = devices.locale.localize(value);
 			});
 
-			moduleBlock("Color", [&](std::string& value) {
+			moduleBlock("Color", [](std::string& value) {
 				mod->color = toColor(value);
 			});
 
-			moduleBlock("Required", [&](std::string& value) {
+			moduleBlock("Required", [](std::string& value) {
 				mod->required = toBool(value);
 			});
 
-			moduleBlock("Unique", [&](std::string& value) {
+			moduleBlock("Unique", [](std::string& value) {
 				mod->unique = toBool(value);
 			});
 
-			moduleBlock("Vital", [&](std::string& value) {
+			moduleBlock("Vital", [](std::string& value) {
 				mod->vital = toBool(value);
 			});
 
-			moduleBlock("DefaultUnlock", [&](std::string& value) {
+			moduleBlock("DefaultUnlock", [](std::string& value) {
 				mod->defaultUnlock = toBool(value);
 			});
 
-			moduleBlock("Sprite", [&](std::string& value) {
+			moduleBlock("Sprite", [](std::string& value) {
 				mod->spriteMat = value;
 			});
 
-			moduleBlock("DrawMode", [&](std::string& value) {
+			moduleBlock("DrawMode", [](std::string& value) {
 				mod->drawMode = toNumber<int>(value);
 			});
 
-			moduleBlock("Hook", [&](std::string& value) {
+			moduleBlock("Hook", [](std::string& value) {
 				mod->hooks.push_back(value);
 			});
 
-			moduleBlock("OnEnable", [&](std::string& value) {
+			moduleBlock("OnEnable", [](std::string& value) {
 				mod->def_onEnable = value;
 			});
 
-			moduleBlock("OnDisable", [&](std::string& value) {
+			moduleBlock("OnDisable", [](std::string& value) {
 				mod->def_onDisable = value;
 			});
 
-			moduleBlock("AddModifier", [&](std::string& value) {
+			moduleBlock("AddModifier", [](std::string& value) {
 				mod->str_appliedStages.push_back(value);
 			});
 
-			moduleBlock("AddUniqueModifier", [&](std::string& value) {
+			moduleBlock("AddUniqueModifier", [](std::string& value) {
 				mod->str_uniqueAppliedStages.push_back(value);
 			});
 
-			moduleBlock("AddHexModifier", [&](std::string& value) {
+			moduleBlock("AddHexModifier", [](std::string& value) {
 				mod->str_hexAppliedStages.push_back(value);
 			});
 
-			moduleBlock("OnCheckErrors", [&](std::string& value) {
+			moduleBlock("OnCheckErrors", [](std::string& value) {
 				mod->def_onCheckErrors = value;
 			});
 
-			moduleBlock("Tags", [&](std::string& value) {
+			moduleBlock("Tags", [](std::string& value) {
 				std::vector<std::string> tags;
 				split(value, tags, ',', true);
 
@@ -1184,14 +1184,14 @@ void loadSubsystemDefinitions(const std::string& filename) {
 				}
 			});
 
-			moduleBlock("AddAdjacentModifier", [&](std::string& value) {
+			moduleBlock("AddAdjacentModifier", [](std::string& value) {
 				SubsystemDef::ShipModifier m;
 				parseShipModifier(m, value);
 
 				mod->adjacentModifiers.push_back(m);
 			});
 
-			auto addModification = [&](std::string& key, std::string& value) {
+			auto addModification = [getVariable, &handler](std::string& key, std::string& value) {
 				SubsystemDef::Variable& var = getVariable(key);
 
 				//Create a default stage at 0
@@ -1235,7 +1235,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 				}
 			};
 
-			moduleBlock.defaultHandler([&](std::string& key, std::string& value) {
+			moduleBlock.defaultHandler([addModification, &handler](std::string& key, std::string& value) {
 				if(!value.empty() && value[0] == '=') {
 					value = value.substr(1, value.size()-1);
 					addModification(key, value);
@@ -1248,7 +1248,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 
 			{
 				auto& assertBlock = moduleBlock.block("Assert");
-				assertBlock.openBlock([&](std::string& value) -> bool {
+				assertBlock.openBlock([](std::string& value) -> bool {
 					mod->asserts.push_back(SubsystemDef::Assert());
 					ass = &mod->asserts.back();
 					ass->fatal = true;
@@ -1259,29 +1259,29 @@ void loadSubsystemDefinitions(const std::string& filename) {
 					return true;
 				});
 
-				assertBlock("Unique", [&](std::string& value) {
+				assertBlock("Unique", [](std::string& value) {
 					ass->unique = toBool(value);
 				});
 
-				assertBlock("Fatal", [&](std::string& value) {
+				assertBlock("Fatal", [](std::string& value) {
 					ass->fatal = toBool(value);
 				});
 
-				assertBlock("Message", [&](std::string& value) {
+				assertBlock("Message", [](std::string& value) {
 					ass->message = devices.locale.localize(value);
 				});
 
-				assertBlock.closeBlock([&]() {
+				assertBlock.closeBlock([]() {
 					ass = 0;
 				});
 			}
 			{
 				auto& requiresBlock = moduleBlock.block("Requires");
-				requiresBlock.openBlock([&](std::string& value) -> bool {
+				requiresBlock.openBlock([](std::string& value) -> bool {
 					return true;
 				});
 
-				requiresBlock.lineHandler([&](std::string& line) {
+				requiresBlock.lineHandler([addModification, &handler](std::string& line) {
 					auto pos = line.find("=");
 					if(pos == line.npos) {
 						error(handler.position());
@@ -1316,11 +1316,11 @@ void loadSubsystemDefinitions(const std::string& filename) {
 			}
 			{
 				auto& providesBlock = moduleBlock.block("Provides");
-				providesBlock.openBlock([&](std::string& value) -> bool {
+				providesBlock.openBlock([](std::string& value) -> bool {
 					return true;
 				});
 
-				providesBlock.lineHandler([&](std::string& line) {
+				providesBlock.lineHandler([addModification, &handler](std::string& line) {
 					auto pos = line.find("=");
 					if(pos == line.npos) {
 						error(handler.position());
@@ -1346,7 +1346,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 
 			{
 				auto& modifyBlock = moduleBlock.block("Modify");
-				modifyBlock.openBlock([&](std::string& value) -> bool {
+				modifyBlock.openBlock([&handler](std::string& value) -> bool {
 					short number = 0;
 					bool unique = false;
 
@@ -1380,11 +1380,11 @@ void loadSubsystemDefinitions(const std::string& filename) {
 					return true;
 				});
 
-				modifyBlock.closeBlock([&]() {
+				modifyBlock.closeBlock([]() {
 					stage = 0;
 				});
 
-				modifyBlock.defaultHandler([&](std::string& key, std::string& value) {
+				modifyBlock.defaultHandler([getVariable, &handler](std::string& key, std::string& value) {
 					if(!value.empty() && value[0] == '=') {
 						SubsystemDef::Variable& var = getVariable(key);
 
@@ -1431,7 +1431,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 
 			{
 				auto& effectBlock = moduleBlock.block("Effect");
-				effectBlock.openBlock([&](std::string& value) -> bool {
+				effectBlock.openBlock([&handler](std::string& value) -> bool {
 					const EffectDef* type = getEffectDefinition(value);
 					if(!type) {
 						eff = 0;
@@ -1450,11 +1450,11 @@ void loadSubsystemDefinitions(const std::string& filename) {
 					return true;
 				});
 
-				effectBlock.closeBlock([&]() {
+				effectBlock.closeBlock([]() {
 					eff = 0;
 				});
 
-				effectBlock.lineHandler([&](std::string& line) {
+				effectBlock.lineHandler([&handler](std::string& line) {
 					auto pos = line.find("=");
 					if(pos == line.npos) {
 						error(handler.position());
@@ -1485,7 +1485,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 
 		{
 			auto& effectBlock = subsysBlock.block("Effect");
-			effectBlock.openBlock([&](std::string& value) -> bool {
+			effectBlock.openBlock([&handler](std::string& value) -> bool {
 				const EffectDef* type = getEffectDefinition(value);
 				if(!type) {
 					eff = 0;
@@ -1504,11 +1504,11 @@ void loadSubsystemDefinitions(const std::string& filename) {
 				return true;
 			});
 
-			effectBlock.closeBlock([&]() {
+			effectBlock.closeBlock([]() {
 				eff = 0;
 			});
 
-			effectBlock.lineHandler([&](std::string& line) {
+			effectBlock.lineHandler([&handler](std::string& line) {
 				auto pos = line.find("=");
 				if(pos == line.npos) {
 					error(handler.position());
@@ -1537,7 +1537,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 		}
 		{
 			auto& effectorBlock = subsysBlock.block("Effector");
-			effectorBlock.openBlock([&](std::string& value) -> bool {
+			effectorBlock.openBlock([&handler](std::string& value) -> bool {
 				const EffectorDef* type = getEffectorDefinition(value);
 				if(!type) {
 					efftr = 0;
@@ -1558,11 +1558,11 @@ void loadSubsystemDefinitions(const std::string& filename) {
 				return true;
 			});
 
-			effectorBlock("Disabled", [&](std::string& value) {
+			effectorBlock("Disabled", [](std::string& value) {
 				efftr->enabled = !toBool(value);
 			});
 
-			effectorBlock("Skin", [&](std::string& value) {
+			effectorBlock("Skin", [](std::string& value) {
 				auto s = efftr->type->skinNames.find(value);
 				if(s != efftr->type->skinNames.end()) {
 					efftr->skinIndex = s->second;
@@ -1572,11 +1572,11 @@ void loadSubsystemDefinitions(const std::string& filename) {
 					error("Effector '%s' has no skin '%s'", efftr->type->name.c_str(), value.c_str());
 			});
 
-			effectorBlock.closeBlock([&]() {
+			effectorBlock.closeBlock([]() {
 				efftr = 0;
 			});
 
-			effectorBlock.lineHandler([&](std::string& line) {
+			effectorBlock.lineHandler([&handler](std::string& line) {
 				auto pos = line.find("=");
 				if(pos == line.npos) {
 					error(handler.position());
@@ -1605,7 +1605,7 @@ void loadSubsystemDefinitions(const std::string& filename) {
 		}
 		{
 			auto& assertBlock = subsysBlock.block("Assert");
-			assertBlock.openBlock([&](std::string& value) -> bool {
+			assertBlock.openBlock([](std::string& value) -> bool {
 				def->asserts.push_back(SubsystemDef::Assert());
 				ass = &def->asserts.back();
 				ass->fatal = true;
@@ -1616,29 +1616,29 @@ void loadSubsystemDefinitions(const std::string& filename) {
 				return true;
 			});
 
-			assertBlock("Unique", [&](std::string& value) {
+			assertBlock("Unique", [](std::string& value) {
 				ass->unique = toBool(value);
 			});
 
-			assertBlock("Fatal", [&](std::string& value) {
+			assertBlock("Fatal", [](std::string& value) {
 				ass->fatal = toBool(value);
 			});
 
-			assertBlock("Message", [&](std::string& value) {
+			assertBlock("Message", [](std::string& value) {
 				ass->message = devices.locale.localize(value);
 			});
 
-			assertBlock.closeBlock([&]() {
+			assertBlock.closeBlock([]() {
 				ass = 0;
 			});
 		}
 		{
 			auto& requiresBlock = subsysBlock.block("Requires");
-			requiresBlock.openBlock([&](std::string& value) -> bool {
+			requiresBlock.openBlock([](std::string& value) -> bool {
 				return true;
 			});
 
-			requiresBlock.lineHandler([&](std::string& line) {
+			requiresBlock.lineHandler([getVariable, &handler](std::string& line) {
 				auto pos = line.find("=");
 				if(pos == line.npos) {
 					error(handler.position());
@@ -1674,11 +1674,11 @@ void loadSubsystemDefinitions(const std::string& filename) {
 		}
 		{
 			auto& providesBlock = subsysBlock.block("Provides");
-			providesBlock.openBlock([&](std::string& value) -> bool {
+			providesBlock.openBlock([](std::string& value) -> bool {
 				return true;
 			});
 
-			providesBlock.lineHandler([&](std::string& line) {
+			providesBlock.lineHandler([getVariable, &handler](std::string& line) {
 				auto pos = line.find("=");
 				if(pos == line.npos) {
 					error(handler.position());
@@ -2009,7 +2009,7 @@ void SubsystemDef::finalize() {
 	}
 
 	//Parse module applied stages
-	auto makeAppliedStage = [&](std::string& line, std::vector<SubsystemDef::AppliedStage>& list) {
+	auto makeAppliedStage = [this](std::string& line, std::vector<SubsystemDef::AppliedStage>& list) {
 		std::string name;
 		std::vector<std::string> args;
 		bool isOptional = false;
