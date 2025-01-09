@@ -14,11 +14,13 @@
 *.db-wal
 *.iobj
 *.ipdb
+*.ilk
 *.o
 *.d
 *.exp
 *.recipe
 *.FileListAbsolute.txt
+.vs
 /mods
 /scripts
 /locales
