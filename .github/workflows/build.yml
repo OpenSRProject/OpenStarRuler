@@ -14,7 +14,7 @@ jobs:
       BUILD_CONFIGURATION: Non-Steam Release
 
     name: Windows build
-    runs-on: windows-2019
+    runs-on: windows-2022
 
     steps:
     - uses: actions/checkout@v4
@@ -86,7 +86,7 @@ jobs:
       run: git tag -f nightly && git push --force origin nightly
 
     - name: Update Windows nightly release
-      uses: WebFreak001/deploy-nightly@v3.1.0
+      uses: WebFreak001/deploy-nightly@v3.2.0
       with:
         upload_url: https://uploads.github.com/repos/OpenSRProject/OpenStarRuler/releases/35747870/assets{?name,label}
         release_id: 35747870
@@ -96,7 +96,7 @@ jobs:
         max_releases: 1
 
     - name: Update Linux nightly release
-      uses: WebFreak001/deploy-nightly@v3.1.0
+      uses: WebFreak001/deploy-nightly@v3.2.0
       with:
         upload_url: https://uploads.github.com/repos/OpenSRProject/OpenStarRuler/releases/35747870/assets{?name,label}
         release_id: 35747870
