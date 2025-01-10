@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\sr2.ico" />
+    <None Include="HybridCRT.props" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
