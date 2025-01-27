@@ -68,6 +68,8 @@
 
 #define DISABLE_SCRIPT_CACHE
 
+#define OSR_COMPILER_VERSION 1
+
 namespace scripts {
 extern void RegisterEarlyNetworkBinds(asIScriptEngine* engine);
 
@@ -368,6 +370,20 @@ void preloadScript(const std::string& filename) {
 	loadScript(filename, dummy);
 }
 
+bool matchesCompilerVersion(const std::string& minVersion, const std::string& maxVersion) {
+	if(std::strlen(minVersion)) {
+		const int version = std::stoi(minVersion);
+		if(OSR_COMPILER_VERSION < version)
+			return false;
+	}
+	if(std::strlen(maxVersion)) {
+		const int version = std::stoi(maxVersion);
+		if(OSR_COMPILER_VERSION > version)
+			return false;
+	}
+	return true;
+}
+
 threads::Mutex reg_compile_lock;
 
 void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFiles = true) {
@@ -390,6 +406,9 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 	reg_compile(pre_import_from, "^[ \t]*from[ \t]+([A-Za-z0-9._-]+)[ \t]+import[ \t]+([^;]+);");
 	reg_compile(pre_import_all, "^[ \t]*import[ \t]+(([A-Za-z0-9._-]|, )+);");
 	reg_compile(pre_export, "^[ \t]*export[ \t]+(([A-Za-z0-9._-]|,* )+);");
+	reg_compile(pre_osr_single_line, "(.*)///([0-9]*)-?([0-9]*)(.*)");
+	reg_compile(pre_osr_multi_open, "(.*)/\*\*([0-9]*)-?([0-9]*)(.*)");
+	reg_compile(pre_osr_multi_close, "(.*)[ \t]([0-9]*)-?([0-9]*)\*\*/(.*)");
 	reg_compile_lock.release();
 	reg_result match;
 
@@ -464,6 +483,17 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 						continue;
 					}
 				break;
+			}
+		}
+
+		// TODO: Figure out something a little better-optimized than always running
+		// three regexes on every line of code?
+		if(reg_match(line, match, pre_osr_single_line)) {
+			const std::string prefix = reg_str(line, match, 1);
+			const std::string postfix = reg_str(line, match, 4);
+			// TODO: Actually evaluate this bit here. The goal is to replace line with prefix+postfix if the spec matches.
+			if(matchesCompilerVersion(reg_str(line, match, 2), reg_str(line, match, 3))) {
+
 			}
 		}
 
