@@ -412,7 +412,7 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 
 
 	for(auto iLine = lines.begin(), end = lines.end(); iLine != end; ++iLine) {
-		std::string& line = *iLine;
+		std::string line = *iLine;
 
 		auto lineStart = line.find_first_not_of(" \t");
 		if(lineStart == std::string::npos) {
