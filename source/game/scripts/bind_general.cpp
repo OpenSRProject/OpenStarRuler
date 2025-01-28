@@ -896,7 +896,7 @@ void RegisterGeneralBinds(bool server, bool shadow) {
 	bindGlobal("float FLOAT_INFINITY", (void*)&_F_INFINITY);
 	bindGlobal("const string BUILD_VERSION", (void*)&_BUILD_NAME);
 	bindGlobal("const bool IS_STEAM_BUILD", (void*)&isSteamBuild);
-	bindGlobal("const uint OSR_COMPILER_VERSION", (void*)&_OSR_COMPILER_VERSION)
+	bindGlobal("const uint OSR_COMPILER_VERSION", (void*)&_OSR_COMPILER_VERSION);
 
 	//Engine detection
 	if(server) {
