@@ -369,12 +369,12 @@ void preloadScript(const std::string& filename) {
 }
 
 bool matchesCompilerVersion(const std::string& minVersion, const std::string& maxVersion) {
-	if(std::strlen(minVersion)) {
+	if(minVersion.length()) {
 		const int version = std::stoi(minVersion);
 		if(OSR_COMPILER_VERSION < version)
 			return false;
 	}
-	if(std::strlen(maxVersion)) {
+	if(maxVersion.length()) {
 		const int version = std::stoi(maxVersion);
 		if(OSR_COMPILER_VERSION > version)
 			return false;
@@ -414,7 +414,7 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 	for(auto iLine = lines.begin(), end = lines.end(); iLine != end; ++iLine) {
 		const std::string& originalLine = *iLine;
 		// I'm not actually sure if this amounts to a meaningful optimization... or any optimization.
-		std:string& line = originalLine; 
+		std::string& line = originalLine; 
 
 		auto lineStart = line.find_first_not_of(" \t");
 		if(lineStart == std::string::npos) {
