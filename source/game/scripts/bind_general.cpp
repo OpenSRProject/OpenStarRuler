@@ -45,6 +45,7 @@ const unsigned _UINT_MAX = UINT_MAX;
 const float _F_INFINITY = std::numeric_limits<float>::infinity();
 const double _D_INFINITY = std::numeric_limits<double>::infinity();
 const std::string _BUILD_NAME(BUILD_VERSION);
+const unsigned _OSR_COMPILER_VERSION = OSR_COMPILER_VERSION;
 #ifdef NSTEAM
 const bool isSteamBuild = false;
 #else
@@ -895,6 +896,7 @@ void RegisterGeneralBinds(bool server, bool shadow) {
 	bindGlobal("float FLOAT_INFINITY", (void*)&_F_INFINITY);
 	bindGlobal("const string BUILD_VERSION", (void*)&_BUILD_NAME);
 	bindGlobal("const bool IS_STEAM_BUILD", (void*)&isSteamBuild);
+	bindGlobal("const uint OSR_COMPILER_VERSION", (void*)&_OSR_COMPILER_VERSION)
 
 	//Engine detection
 	if(server) {

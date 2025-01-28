@@ -6,6 +6,8 @@
 #include "network/message.h"
 #include <map>
 
+#define OSR_COMPILER_VERSION 1
+
 struct Player;
 struct Image;
 class Object;

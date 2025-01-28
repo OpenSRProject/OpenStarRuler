@@ -68,8 +68,6 @@
 
 #define DISABLE_SCRIPT_CACHE
 
-#define OSR_COMPILER_VERSION 1
-
 namespace scripts {
 extern void RegisterEarlyNetworkBinds(asIScriptEngine* engine);
 
@@ -414,7 +412,9 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 
 
 	for(auto iLine = lines.begin(), end = lines.end(); iLine != end; ++iLine) {
-		const std::string& line = *iLine;
+		const std::string& originalLine = *iLine;
+		// I'm not actually sure if this amounts to a meaningful optimization... or any optimization.
+		std:string& line = originalLine; 
 
 		auto lineStart = line.find_first_not_of(" \t");
 		if(lineStart == std::string::npos) {
@@ -488,12 +488,26 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 
 		// TODO: Figure out something a little better-optimized than always running
 		// three regexes on every line of code?
+		// On the bright side, we're only running them if we're in the right section...
 		if(reg_match(line, match, pre_osr_single_line)) {
 			const std::string prefix = reg_str(line, match, 1);
 			const std::string postfix = reg_str(line, match, 4);
-			// TODO: Actually evaluate this bit here. The goal is to replace line with prefix+postfix if the spec matches.
 			if(matchesCompilerVersion(reg_str(line, match, 2), reg_str(line, match, 3))) {
-
+				line = prefix + postfix;
+			}
+		}
+		if(reg_match(line, match, pre_osr_multi_open)) {
+			const std::string prefix = reg_str(line, match, 1);
+			const std::string postfix = reg_str(line, match, 4);
+			if(matchesCompilerVersion(reg_str(line, match, 2), reg_str(line, match, 3))) {
+				line = prefix + postfix;
+			}
+		}
+		if(reg_match(line, match, pre_osr_multi_close)) {
+			const std::string prefix = reg_str(line, match, 1);
+			const std::string postfix = reg_str(line, match, 4);
+			if(matchesCompilerVersion(reg_str(line, match, 2), reg_str(line, match, 3))) {
+				line = prefix + postfix;
 			}
 		}
 
