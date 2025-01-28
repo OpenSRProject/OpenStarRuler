@@ -404,17 +404,15 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 	reg_compile(pre_import_from, "^[ \t]*from[ \t]+([A-Za-z0-9._-]+)[ \t]+import[ \t]+([^;]+);");
 	reg_compile(pre_import_all, "^[ \t]*import[ \t]+(([A-Za-z0-9._-]|, )+);");
 	reg_compile(pre_export, "^[ \t]*export[ \t]+(([A-Za-z0-9._-]|,* )+);");
-	reg_compile(pre_osr_single_line, "(.*)///([0-9]*)-?([0-9]*)(.*)");
-	reg_compile(pre_osr_multi_open, "(.*)/\*\*([0-9]*)-?([0-9]*)(.*)");
-	reg_compile(pre_osr_multi_close, "(.*)[ \t]([0-9]*)-?([0-9]*)\*\*/(.*)");
+	reg_compile(pre_osr_single_line, "(.*)//\$([0-9]*)-?([0-9]*)(.*)");
+	reg_compile(pre_osr_multi_open, "(.*)/\*\$([0-9]*)-?([0-9]*)(.*)");
+	reg_compile(pre_osr_multi_close, "(.*)[ \t]([0-9]*)-?([0-9]*)\$\*/(.*)");
 	reg_compile_lock.release();
 	reg_result match;
 
 
 	for(auto iLine = lines.begin(), end = lines.end(); iLine != end; ++iLine) {
-		const std::string& originalLine = *iLine;
-		// I'm not actually sure if this amounts to a meaningful optimization... or any optimization.
-		std::string& line = originalLine; 
+		std::string& line = *iLine;
 
 		auto lineStart = line.find_first_not_of(" \t");
 		if(lineStart == std::string::npos) {
