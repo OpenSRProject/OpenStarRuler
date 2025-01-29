@@ -487,25 +487,25 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 		// TODO: Figure out something a little better-optimized than always running
 		// three regexes on every line of code?
 		// On the bright side, we're only running them if we're in the right section...
-		if(reg_match(line, match, pre_osr_single_line)) {
+		while(reg_match(line, match, pre_osr_single_line)) {
 			const std::string prefix = reg_str(line, match, 1);
 			const std::string postfix = reg_str(line, match, 4);
 			if(matchesCompilerVersion(reg_str(line, match, 2), reg_str(line, match, 3))) {
-				line = prefix + postfix;
+				*iLine = prefix + postfix;
 			}
 		}
-		if(reg_match(line, match, pre_osr_multi_open)) {
+		while(reg_match(line, match, pre_osr_multi_open)) {
 			const std::string prefix = reg_str(line, match, 1);
 			const std::string postfix = reg_str(line, match, 4);
 			if(matchesCompilerVersion(reg_str(line, match, 2), reg_str(line, match, 3))) {
-				line = prefix + postfix;
+				*iLine = prefix + postfix;
 			}
 		}
-		if(reg_match(line, match, pre_osr_multi_close)) {
+		while(reg_match(line, match, pre_osr_multi_close)) {
 			const std::string prefix = reg_str(line, match, 1);
 			const std::string postfix = reg_str(line, match, 4);
 			if(matchesCompilerVersion(reg_str(line, match, 2), reg_str(line, match, 3))) {
-				line = prefix + postfix;
+				*iLine = prefix + postfix;
 			}
 		}
 
