@@ -487,7 +487,7 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 		// TODO: Figure out something a little better-optimized than always running
 		// three regexes on every line of code?
 		// On the bright side, we're only running them if we're in the right section...
-		std::string osrLine = line;
+		std::string osrLine = new std::string(line);
 		while(reg_match(osrLine, match, pre_osr_single_line)) {
 			const std::string prefix = reg_str(osrLine, match, 1);
 			const std::string postfix = reg_str(osrLine, match, 4);
@@ -516,6 +516,7 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 
 			fl.imports.insert(ImportSpec(mod, def));
 			output += "\n";
+			delete osrLine;
 			continue;
 		}
 
@@ -534,6 +535,7 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 			}
 
 			output += "\n";
+			delete osrLine;
 			continue;
 		}
 
@@ -558,6 +560,7 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 			}
 
 			output += "\n";
+			delete osrLine;
 			continue;
 		}
 
@@ -616,13 +619,15 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 						error("  Tried %s", includeFile.c_str());
 					}
 					output += "\n";
+					delete osrLine;
 					continue;
 				}
 			}
 
 			//Don't include the same file multiple times
 			if(fl.includes.find(includeFile) != fl.includes.end()) {
-				output += "\n";
+				output += "\n";	
+				delete osrLine;
 				continue;
 			}
 
@@ -647,10 +652,12 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 			}
 			
 			output.append(1,'\n');
+			delete osrLine;
 		}
 		else {
 			output += osrLine;
 			output.append(1,'\n');
+			delete osrLine;
 		}
 	}
 }
