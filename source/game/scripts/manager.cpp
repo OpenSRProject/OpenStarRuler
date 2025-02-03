@@ -369,12 +369,17 @@ void preloadScript(const std::string& filename) {
 }
 
 bool matchesCompilerVersion(const std::string& minVersion, const std::string& maxVersion) {
-	if(minVersion.length()) {
+	// TODO: Short-circuited version matching for now, because the regex matcher 
+	// in `parseFile()` spirals into an infinite loop if the version is out of bounds.
+	// Don't merge to master before fixing that!
+	return true;
+	
+	if(!minVersion.empty()) {
 		const int version = std::stoi(minVersion);
 		if(OSR_COMPILER_VERSION < version)
 			return false;
 	}
-	if(maxVersion.length()) {
+	if(!maxVersion.empty()) {
 		const int version = std::stoi(maxVersion);
 		if(OSR_COMPILER_VERSION > version)
 			return false;
@@ -393,6 +398,11 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 
 	std::string& output = fl.contents;
 	output.reserve(size);
+	
+	if (lines.empty())
+		return;
+	auto& start = lines.front();
+	const bool isOsrScript = trim(start) == "//#opensr";
 
 	ManagerType curType = getManagerType(man);
 	ManagerType selType = curType;
@@ -404,16 +414,14 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 	reg_compile(pre_import_from, "^[ \t]*from[ \t]+([A-Za-z0-9._-]+)[ \t]+import[ \t]+([^;]+);");
 	reg_compile(pre_import_all, "^[ \t]*import[ \t]+(([A-Za-z0-9._-]|, )+);");
 	reg_compile(pre_export, "^[ \t]*export[ \t]+(([A-Za-z0-9._-]|,* )+);");
-	reg_compile(pre_osr_single_line, "(.*)//\$([0-9]*)-?([0-9]*)(.*)");
-	reg_compile(pre_osr_multi_open, "(.*)/\*\$([0-9]*)-?([0-9]*)(.*)");
-	reg_compile(pre_osr_multi_close, "(.*)[ \t]([0-9]*)-?([0-9]*)\$\*/(.*)");
+	reg_compile(pre_osr_open, "(.*)/[/*]\\%([0-9]*)-?([0-9]*)(.*)");
+	reg_compile(pre_osr_multi_close, "(.*)[ \t]([0-9]*)-?([0-9]*)\\%\\*/(.*)");
 	reg_compile_lock.release();
 	reg_result match;
 
 
-	for(auto iLine = lines.begin(), end = lines.end(); iLine != end; ++iLine) {
-		const std::string& line = *iLine;
-
+	for (const auto& line : lines)
+	{
 		auto lineStart = line.find_first_not_of(" \t");
 		if(lineStart == std::string::npos) {
 			output.append(1, '\n');
@@ -449,7 +457,7 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 			else
 				selType = MT_Client_Side;
 
-			output += "\n";
+			output += '\n';
 			continue;
 		}
 		else {
@@ -459,25 +467,25 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 				case MT_GUI:
 				case MT_Menu:
 					if(selType != curType) {
-						output += "\n";
+						output += '\n';
 						continue;
 					}
 				break;
 				case MT_Game:
 					if(curType != MT_GUI && curType != MT_Server && curType != MT_Shadow) {
-						output += "\n";
+						output += '\n';
 						continue;
 					}
 				break;
 				case MT_Client_Side:
 					if(curType != MT_Menu && curType != MT_GUI) {
-						output += "\n";
+						output += '\n';
 						continue;
 					}
 				break;
 				case MT_Server_Side:
 					if(curType != MT_Shadow && curType != MT_Server) {
-						output += "\n";
+						output += '\n';
 						continue;
 					}
 				break;
@@ -485,47 +493,45 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 		}
 
 		// TODO: Figure out something a little better-optimized than always running
-		// three regexes on every line of code?
+		// two regexes on every line of code?
 		// On the bright side, we're only running them if we're in the right section...
-		auto osrLine = new std::string(iLine);
-		while(reg_match(osrLine, match, pre_osr_single_line)) {
-			const std::string prefix = reg_str(osrLine, match, 1);
-			const std::string postfix = reg_str(osrLine, match, 4);
-			if(matchesCompilerVersion(reg_str(osrLine, match, 2), reg_str(osrLine, match, 3))) {
-				osrLine = prefix + postfix;
+		// and an OSR-enabled script...
+		std::string osrLine;
+		if (isOsrScript)
+		{
+			osrLine = line;
+			while(reg_match(osrLine, match, pre_osr_open)) {
+				const std::string prefix = reg_str(osrLine, match, 1);
+				const std::string postfix = reg_str(osrLine, match, 4);
+				if(matchesCompilerVersion(reg_str(osrLine, match, 2), reg_str(osrLine, match, 3))) {
+					osrLine = prefix + postfix;
+				}
 			}
-		}
-		while(reg_match(osrLine, match, pre_osr_multi_open)) {
-			const std::string prefix = reg_str(osrLine, match, 1);
-			const std::string postfix = reg_str(osrLine, match, 4);
-			if(matchesCompilerVersion(reg_str(osrLine, match, 2), reg_str(osrLine, match, 3))) {
-				osrLine = prefix + postfix;
-			}
-		}
-		while(reg_match(osrLine, match, pre_osr_multi_close)) {
-			const std::string prefix = reg_str(osrLine, match, 1);
-			const std::string postfix = reg_str(osrLine, match, 4);
-			if(matchesCompilerVersion(reg_str(osrLine, match, 2), reg_str(osrLine, match, 3))) {
-				osrLine = prefix + postfix;
+			while(reg_match(osrLine, match, pre_osr_multi_close)) {
+				const std::string prefix = reg_str(osrLine, match, 1);
+				const std::string postfix = reg_str(osrLine, match, 4);
+				if(matchesCompilerVersion(reg_str(osrLine, match, 2), reg_str(osrLine, match, 3))) {
+					osrLine = prefix + postfix;
+				}
 			}
 		}
 
-		if(osrLine[lineStart] == 'f' && reg_match(osrLine, match, pre_import_from)) {
-			std::string mod = reg_str(osrLine, match, 1);
-			std::string def = reg_str(osrLine, match, 2);
+		const std::string& finalLine = isOsrScript ? osrLine : line;
+		if(finalLine[lineStart] == 'f' && reg_match(finalLine, match, pre_import_from)) {
+			std::string mod = reg_str(finalLine, match, 1);
+			std::string def = reg_str(finalLine, match, 2);
 
 			fl.imports.insert(ImportSpec(mod, def));
-			output += "\n";
-			delete osrLine;
+			output += '\n';
 			continue;
 		}
 
-		if(osrLine[lineStart] == 'i' && reg_match(osrLine, match, pre_import_all)) {
-			std::string mod = reg_str(osrLine, match, 1);
+		if(finalLine[lineStart] == 'i' && reg_match(finalLine, match, pre_import_all)) {
+			std::string mod = reg_str(finalLine, match, 1);
 
-			if(mod.find(",") != std::string::npos) {
+			if(mod.find(',') != std::string::npos) {
 				std::vector<std::string> modules;
-				split(mod, modules, ",", true);
+				split(mod, modules, ',', true);
 
 				foreach(m, modules)
 					fl.imports.insert(ImportSpec(*m, "*"));
@@ -534,13 +540,12 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 				fl.imports.insert(ImportSpec(mod, "*"));
 			}
 
-			output += "\n";
-			delete osrLine;
+			output += '\n';
 			continue;
 		}
 
-		if(osrLine[lineStart] == 'e' && reg_match(osrLine, match, pre_export)) {
-			std::string sym = reg_str(osrLine, match, 1);
+		if(finalLine[lineStart] == 'e' && reg_match(finalLine, match, pre_export)) {
+			std::string sym = reg_str(finalLine, match, 1);
 			auto* lst = &fl.exports;
 
 			if(sym.compare(0, 5, "from ") == 0) {
@@ -548,9 +553,9 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 				lst = &fl.exportsFrom;
 			}
 
-			if(sym.find(",") != std::string::npos) {
+			if(sym.find(',') != std::string::npos) {
 				std::vector<std::string> symbols;
-				split(sym, symbols, ",", true);
+				split(sym, symbols, ',', true);
 
 				foreach(s, symbols)
 					lst->insert(*s);
@@ -559,14 +564,13 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 				lst->insert(sym);
 			}
 
-			output += "\n";
-			delete osrLine;
+			output += '\n';
 			continue;
 		}
 
-		if(mayBeDirective && reg_match(osrLine, match, pre_priority)) {
-			std::string type = reg_str(osrLine, match, 1);
-			std::string prior = reg_str(osrLine, match, 2);
+		if(mayBeDirective && reg_match(finalLine, match, pre_priority)) {
+			std::string type = reg_str(finalLine, match, 1);
+			std::string prior = reg_str(finalLine, match, 2);
 			int priority = toNumber<int>(prior);
 
 			if(type == "init") {
@@ -586,10 +590,10 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 					filename.c_str(), type.c_str());
 			}
 
-			output += "\n";
+			output += '\n';
 		}
-		else if(mayBeDirective && reg_match(osrLine, match, pre_include)) {
-			std::string filePart = reg_str(osrLine, match, 1);
+		else if(mayBeDirective && reg_match(finalLine, match, pre_include)) {
+			std::string filePart = reg_str(finalLine, match, 1);
 
 			//Check include relative to current file first
 			std::string includeFile = getAbsolutePath(devices.mods.resolve(
@@ -618,25 +622,23 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 							filePart, *it));
 						error("  Tried %s", includeFile.c_str());
 					}
-					output += "\n";
-					delete osrLine;
+					output += '\n';
 					continue;
 				}
 			}
 
 			//Don't include the same file multiple times
 			if(fl.includes.find(includeFile) != fl.includes.end()) {
-				output += "\n";	
-				delete osrLine;
+				output += '\n';	
 				continue;
 			}
 
 			if(!cacheFiles) {
-				std::string path = getAbsolutePath(includeFile);
+				std::string includePath = getAbsolutePath(includeFile);
 				File& incl = *new File();
 				parseFile(man, incl, includeFile, false);
 
-				fl.includes[path] = &incl;
+				fl.includes[includePath] = &incl;
 			}
 			else {
 				man->load("", includeFile);
@@ -652,12 +654,10 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 			}
 			
 			output.append(1,'\n');
-			delete osrLine;
 		}
 		else {
-			output += osrLine;
+			output += finalLine;
 			output.append(1,'\n');
-			delete osrLine;
 		}
 	}
 }
