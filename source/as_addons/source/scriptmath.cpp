@@ -72,6 +72,18 @@ double fraction(double v)
 }
 #endif
 
+static_assert(sizeof(asUINT) == sizeof(float));
+static_assert(sizeof(asQWORD) == sizeof(double));
+
+// TODO: replace with C++20 std::bit_cast
+template <class T, class R>
+static R bitcast(T value) {
+	static_assert(sizeof(T) == sizeof(R));
+	R result;
+	memcpy(&result, &value, sizeof(T));
+	return result;
+}
+
 // As AngelScript doesn't allow bitwise manipulation of float types we'll provide a couple of
 // functions for converting float values to IEEE 754 formatted values etc. This also allow us to 
 // provide a platform agnostic representation to the script so the scripts don't have to worry
@@ -80,19 +92,19 @@ float fpFromIEEE(asUINT raw)
 {
 	// TODO: Identify CPU family to provide proper conversion
 	//        if the CPU doesn't natively use IEEE style floats
-	return *reinterpret_cast<float*>(&raw);
+	return bitcast<asUINT, float>(raw);
 }
 asUINT fpToIEEE(float fp)
 {
-	return *reinterpret_cast<asUINT*>(&fp);
+	return bitcast<float, asUINT>(fp);
 }
 double fpFromIEEE(asQWORD raw)
 {
-	return *reinterpret_cast<double*>(&raw);
+	return bitcast<asQWORD, double>(raw);
 }
 asQWORD fpToIEEE(double fp)
 {
-	return *reinterpret_cast<asQWORD*>(&fp);
+	return bitcast<double, asQWORD>(fp);
 }
 
 float _round(float v) {
@@ -100,7 +112,7 @@ float _round(float v) {
 }
 
 double _round(double v) {
-	return floorl(v + 0.5);
+	return floor(v + 0.5);
 }
 
 // closeTo() is used to determine if the binary representation of two numbers are 

@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
@@ -594,7 +595,10 @@ public:
 	}
 
 	void setDouble(uint64_t key, double value, double dirtyResolution = 0.0) {
-		setTyped<double,true>(key, reinterpret_cast<uint64_t&>(value), dirtyResolution);
+		uint64_t valueBits;
+		static_assert(sizeof(double) == sizeof(uint64_t));
+		std::memcpy(&valueBits, &value, sizeof(double));
+		setTyped<double,true>(key, valueBits, dirtyResolution);
 	}
 };
 
