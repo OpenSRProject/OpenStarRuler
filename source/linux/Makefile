@@ -27,7 +27,8 @@ else
 	OBJDIR = obj/$(OSNAME)$(ARCH)
 	LIBDIR = obj/$(OSNAME)$(ARCH)
 	BUILDTYPE = release
-	OPTFLAGS = -Ofast
+	# TODO: there's a bunch of strict aliasing warnings, so I'm playing safe here
+	OPTFLAGS = -O3 -ffast-math -fno-semantic-interposition -fno-strict-aliasing
 	CXXFLAGS += $(OPTFLAGS)
 ifdef ADD_DBG
 	CXXFLAGS += -g
@@ -73,11 +74,14 @@ ifndef CXX
 	CXX = g++
 endif
 
-CXXFLAGS += -std=c++11
+CXXFLAGS += -std=c++11 -Wno-c++14-extensions -Wno-c++17-extensions
 CXXFLAGS += -DLIN_MODE -DGLIBCXX_USE_NANOSLEEP
 CXXFLAGS += -Wall -Wno-invalid-offsetof -Wno-switch -Wno-reorder
 CXXFLAGS += -Wno-unused-local-typedefs
-CXXFLAGS += -Wuninitialized -Wmaybe-uninitialized
+CXXFLAGS += -Wuninitialized
+ifeq (,$(findstring clang, $(shell $(CXX) --version)))
+	CXXFLAGS += -Wmaybe-uninitialized
+endif
 CXXFLAGS += -Werror=return-type
 CXXFLAGS += -I./source/game -I./source/angelscript/include
 CXXFLAGS += -I/usr/include/freetype2 -isystem./source/glfw/include

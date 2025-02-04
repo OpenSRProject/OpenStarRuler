@@ -94,11 +94,11 @@ bool saveGame(const std::string& filename) {
 	//TODO: Handle errors gracefully, or guarantee they cannot occur
 	try {
 		SaveFile* pfile = SaveFile::open(filename, SM_Write);
-		SaveFile& file = *pfile;
-		if(&file == 0) {
+		if(pfile == nullptr) {
 			error("Unable to open file '%s'", filename.c_str());
 			return false;
 		}
+		SaveFile& file = *pfile;
 
 		addSubsystemIdentifiers(file);
 		addHullIdentifiers(file);
@@ -201,11 +201,12 @@ bool loadGame(const std::string& filename) {
 #ifndef _DEBUG
 	try {
 #endif
-		SaveFile& file = *SaveFile::open(filename, SM_Read);
-		if(&file == 0) {
+		SaveFile* pfile = SaveFile::open(filename, SM_Read);
+		if(pfile == nullptr) {
 			error("Unable to open file '%s'", filename.c_str());
 			return false;
 		}
+		SaveFile& file = *pfile;
 
 		file.loadIdentifiers();
 		addDummyIdentifiers(file);

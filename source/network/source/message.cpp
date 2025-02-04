@@ -1,4 +1,6 @@
 #include <network/message.h>
+
+#include <cstring>
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
@@ -1028,7 +1030,9 @@ void Message::writeSmallVec3(double x, double y, double z) {
 		writeFixed(0.0, -1.0, 1.0, 15);
 
 	float fPrimaryDim = primaryDim;
-	unsigned floatBits = *(unsigned*)&fPrimaryDim;
+	unsigned floatBits;
+	static_assert(sizeof(float) == sizeof(unsigned));
+	std::memcpy(&floatBits, &fPrimaryDim, sizeof(float));
 	writeBitValue(floatBits >> 4, 28);
 }
 
@@ -1046,7 +1050,10 @@ void Message::readSmallVec3(double& x, double& y, double& z) {
 	minorDims[1] = readFixed(-1.0, 1.0, 15) * minorDims[0];
 
 	unsigned floatBits = readBitValue(28) << 4;
-	double primaryDim = *(float*)&floatBits;
+	float fPrimaryDim;
+	static_assert(sizeof(float) == sizeof(unsigned));
+	std::memcpy(&fPrimaryDim, &floatBits, sizeof(float));
+	double primaryDim = fPrimaryDim;
 
 	if(flip)
 		std::swap(minorDims[0], minorDims[1]);

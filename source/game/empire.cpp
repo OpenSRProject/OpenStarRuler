@@ -1011,9 +1011,10 @@ Empire* recvEmpireInitial(net::Message& msg) {
 		emp->subsysData[i].read(getSubsystemDef(i), msg);
 
 	for(unsigned i = 0, cnt = emp->statHistories.size(); i < cnt; ++i) {
-		auto& stat = *(StatHistory*)emp->lockStatHistory(i);
-		if(&stat == 0)
+		StatHistory* pstat = (StatHistory*)emp->lockStatHistory(i);
+		if(pstat == nullptr)
 			break;
+		auto& stat = *pstat;
 		bool isInt = statIsint(i);
 
 		unsigned lastTime = 0;
