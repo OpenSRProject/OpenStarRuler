@@ -9,6 +9,9 @@ typedef std::match_results<std::string::const_iterator> reg_result;
 #define reg_match(str, m, r)\
 	std::regex_match(str.cbegin(), str.cend(), m, r)
 
+#define reg_match_from(str, m, r, start)\
+	std::regex_match(start, str.cend(), m, r)
+
 #define reg_str(str, m, i)\
 	m[i]
 

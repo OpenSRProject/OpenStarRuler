@@ -368,12 +368,7 @@ void preloadScript(const std::string& filename) {
 	loadScript(filename, dummy);
 }
 
-bool matchesCompilerVersion(const std::string& minVersion, const std::string& maxVersion) {
-	// TODO: Short-circuited version matching for now, because the regex matcher 
-	// in `parseFile()` spirals into an infinite loop if the version is out of bounds.
-	// Don't merge to master before fixing that!
-	return true;
-	
+bool matchesCompilerVersion(const std::string& minVersion, const std::string& maxVersion) {	
 	if(!minVersion.empty()) {
 		const int version = std::stoi(minVersion);
 		if(OSR_COMPILER_VERSION < version)
@@ -386,6 +381,30 @@ bool matchesCompilerVersion(const std::string& minVersion, const std::string& ma
 	}
 	return true;
 }
+
+std::string checkCompilerVersions(std::string osrLine, const regex& matcher) {
+	auto start = osrLine.cbegin();
+	reg_result match;
+	while(reg_match_from(osrLine, match, matcher, start)) {
+		const std::string prefix = reg_str(osrLine, match, 1);
+		const std::string minVersion = reg_str(osrLine, match, 2);
+		const std::string maxVersion = reg_str(osrLine, match, 3);
+		const std::string postfix = reg_str(osrLine, match, 4);
+		if(matchesCompilerVersion(minVersion, maxVersion)) {
+			osrLine = prefix + postfix;
+			// Two reasons for this:
+			// 1. Reassigning osrLine probably doesn't faze the existing iterator.
+			// 2. Even if it does, we just reindexed it, so we need to restart from the top.
+			start = osrLine.cbegin();
+		}
+		// Advance the matcher just past the version spec,
+		// so we don't catch the same spec again and cause an infinite loop.
+		else start += static_cast<std::string::const_iterator::difference_type>(
+			prefix.length() + minVersion.length() + maxVersion.length()
+		);
+	}
+	return osrLine;
+} 
 
 threads::Mutex reg_compile_lock;
 
@@ -500,20 +519,8 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 		if (isOsrScript)
 		{
 			osrLine = line;
-			while(reg_match(osrLine, match, pre_osr_open)) {
-				const std::string prefix = reg_str(osrLine, match, 1);
-				const std::string postfix = reg_str(osrLine, match, 4);
-				if(matchesCompilerVersion(reg_str(osrLine, match, 2), reg_str(osrLine, match, 3))) {
-					osrLine = prefix + postfix;
-				}
-			}
-			while(reg_match(osrLine, match, pre_osr_multi_close)) {
-				const std::string prefix = reg_str(osrLine, match, 1);
-				const std::string postfix = reg_str(osrLine, match, 4);
-				if(matchesCompilerVersion(reg_str(osrLine, match, 2), reg_str(osrLine, match, 3))) {
-					osrLine = prefix + postfix;
-				}
-			}
+			osrLine = checkCompilerVersions(osrLine, pre_osr_open);
+			osrLine = checkCompilerVersions(osrLine, pre_osr_multi_close);
 		}
 
 		const std::string& finalLine = isOsrScript ? osrLine : line;
