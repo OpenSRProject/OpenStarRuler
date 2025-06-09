@@ -163,7 +163,7 @@ static rapidjson::Value* findMember(rapidjson::Value* node, const std::string& n
 		scripts::throwException("Node is not an object.");
 		return nullptr;
 	}
-	auto mem = node->FindMember(name.c_str());
+	auto mem = node->FindMember(name);
 	if(mem == node->MemberEnd())
 		return nullptr;
 	return &mem->value;
@@ -187,7 +187,7 @@ static rapidjson::Value* getMember(rapidjson::Value* node, const std::string& na
 	if(mem != node->MemberEnd())
 		return &mem->value;
 	rapidjson::Value nullValue;
-	node->AddMember(rapidjson::StringRef(name), nullValue, getAllocator());
+	node->AddMember(rapidjson::Value(name, getAllocator()), nullValue, getAllocator());
 	return findMember(node, name);
 }
 
