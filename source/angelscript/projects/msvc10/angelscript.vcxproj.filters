@@ -217,8 +217,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\..\source\as_callfunc_x64_msvc_asm.asm">
+    <MASM Include="..\..\source\as_callfunc_x64_msvc_asm.asm">
       <Filter>Source Files</Filter>
-    </CustomBuild>
+    </MASM>
   </ItemGroup>
 </Project>
