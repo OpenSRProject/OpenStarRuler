@@ -551,6 +551,9 @@ bool ParticleSystem::preRender(render::RenderDriver& driver) {
 							if(msOffset > 64)
 								sound->setPlayPosition(msOffset);
 							double base_dist = abs_scale * (flow->life.max * flow->speed.max + flow->scale.max);
+							if (base_dist < 0) {
+								base_dist *= -1;
+							}
 							sound->setMinDistance(base_dist);
 							sound->setMaxDistance(base_dist * 128.f);
 							sound->setVolume(base_dist);
