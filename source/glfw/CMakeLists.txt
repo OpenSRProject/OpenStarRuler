@@ -1,6 +1,6 @@
-project(GLFW C)
+cmake_minimum_required(VERSION 3.5)
 
-cmake_minimum_required(VERSION 2.8)
+project(GLFW C)
 
 set(GLFW_VERSION_MAJOR "3")
 set(GLFW_VERSION_MINOR "0")
