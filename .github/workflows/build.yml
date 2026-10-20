@@ -17,10 +17,10 @@ jobs:
     runs-on: windows-2022
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v3
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
@@ -33,7 +33,7 @@ jobs:
       shell: powershell
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: binaries-windows.zip
         path: binaries-windows.zip
@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Install dependencies
       run: sudo apt update && sudo apt install cmake libpng-dev libglew-dev libogg-dev libfreetype6-dev libcurl4-openssl-dev libxrandr-dev libopenal-dev libvorbis-dev xorg-dev
@@ -55,7 +55,7 @@ jobs:
       run: zip binaries-linux.zip bin bin/lin64 bin/lin64/StarRuler2.bin credits.txt StarRuler2.sh COPYING sr2.png
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: binaries-linux.zip
         path: binaries-linux.zip
@@ -70,15 +70,15 @@ jobs:
     - linux
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Download Windows artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
       with:
         name: binaries-windows.zip
 
     - name: Download Linux artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
       with:
         name: binaries-linux.zip
 
