@@ -44,7 +44,7 @@ static void _event_mode(irc_session_t* session, const char* event, const char* o
 static void _event_umode(irc_session_t* session, const char* event, const char* origin, const char** params, unsigned int count);
 static void _event_numeric(irc_session_t* session, unsigned event, const char* origin, const char** params, unsigned int count);
 
-struct caseless_less : std::binary_function<std::string, std::string, bool> {
+struct caseless_less {
     bool operator()(const std::string& left, const std::string& right) const {
 		if(left.size() != right.size())
 			return left.size() < right.size();
