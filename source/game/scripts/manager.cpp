@@ -19,15 +19,14 @@
 #include "scriptany.h"
 #include "scripthandle.h"
 #include "compat/misc.h"
-#include "compat/regex.h"
 #include "util/save_file.h"
-#include <stack>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <queue>
 #include <algorithm>
+#include <fstream>
+#include <mutex>
 #include <set>
+#include <sstream>
+#include <string>
+#include <string_view>
 #include "../angelscript/source/as_module.h"
 #include "../angelscript/source/as_objecttype.h"
 
@@ -65,6 +64,8 @@
 #endif
 
 #endif
+
+using namespace std::literals;
 
 #define DISABLE_SCRIPT_CACHE
 
@@ -304,40 +305,59 @@ void Manager::loadDirectory(const std::string& dirname) {
 	}
 }
 
+namespace {
+
 class CachedScript {
 	bool loaded;
-	threads::Mutex lock;
+	std::once_flag flag;
 	std::string path;
-	std::vector<std::string> lines;
+	std::string content;
 public:
-	size_t size;
-
-	CachedScript(const std::string& filename) : loaded(false), path(filename), size(0) {
+	explicit CachedScript(const std::string& filename) : loaded(false), path(filename) {
 	}
 
-	const std::vector<std::string>& get() {
-		threads::Lock l(lock);
+	const std::string& get() {
 		if(!loaded) {
-			std::ifstream file(path.c_str(), std::ios_base::in);
-			skipBOM(file);
+			std::call_once(flag, [this] {
+				std::ifstream file(path.c_str(), std::ios_base::in | std::ios_base::binary);
+				skipBOM(file);
 
-			std::string line;
-			while(file.good()) {
-				std::getline(file, line);
-				size += line.size() + 1;
-				lines.push_back(line);
-			}
+				std::ostringstream buf;
+				buf << file.rdbuf();
+				std::string str = buf.str();
+				content.reserve(str.length() + 1);
 
-			loaded = true;
+				size_t pos = 0;
+
+				while (true) {
+					size_t location = str.find_first_of('\r', pos);
+					if (location == std::string::npos) {
+						content.append(str, pos, str.length() - pos);
+						break;
+					}
+					content.append(str, pos, location - pos);
+					if (location + 1 == str.length() || str[location + 1] != '\n') {
+						content += '\r';
+					}
+					pos = location + 1;
+				}
+				if (!content.empty() && content.back() != '\n')
+				{
+					content += '\n';
+				}
+
+				loaded = true;
+			});
 		}
-		return lines;
+		return content;
 	}
 };
+
 
 threads::Mutex loadedScriptsLock;
 std::unordered_map<std::string, CachedScript*> cachedScripts;
 
-const std::vector<std::string>& loadScript(const std::string& filename, size_t& size) {
+const std::string& loadScript(const std::string& filename) {
 	auto path = getAbsolutePath(filename);
 	CachedScript* script = nullptr;
 	{
@@ -352,9 +372,10 @@ const std::vector<std::string>& loadScript(const std::string& filename, size_t& 
 		}
 	}
 	assert(script);
-	size = script->size;
 	return script->get();
 }
+
+} /* namespace */
 
 void clearCachedScripts() {
 	threads::Lock l(loadedScriptsLock);
@@ -364,26 +385,78 @@ void clearCachedScripts() {
 }
 
 void preloadScript(const std::string& filename) {
-	size_t dummy;
-	loadScript(filename, dummy);
+	loadScript(filename);
 }
 
-threads::Mutex reg_compile_lock;
+static std::map<std::string, std::string> getDefaultDefines(ManagerType type) {
+	std::map<std::string, std::string> defines;
+	defines["ABC"s] = "1"s;
 
-void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFiles = true) {
+	if (type == MT_Server) {
+		defines["MT_SERVER"s] = "1"s;
+	} else if (type == MT_Shadow) {
+		defines["MT_SHADOW"s] = "1"s;
+	} else if (type == MT_Menu) {
+		defines["MT_MENU"s] = "1"s;
+	} else if (type == MT_GUI) {
+		defines["MT_GUI"s] = "1"s;
+	}
+
+	if (type == MT_Server || type == MT_Shadow || type == MT_GUI) {
+		defines["MT_GAME"s] = "1"s;
+	}
+	if (type == MT_Menu || type == MT_GUI) {
+		defines["MT_CLIENT_SIDE"s] = "1"s;
+	}
+	if (type == MT_Server || type == MT_Shadow) {
+		defines["MT_SERVER_SIDE"s] = "1"s;
+	}
+
+	return defines;
+}
+
+static bool isLowerAlpha(char c) {
+	return c >= 'a' && c <= 'z';
+}
+
+template <class InputIt1, class InputIt2, class Range2>
+static bool equal(InputIt1 begin, InputIt2 end, Range2 const& range) {
+	return std::equal(begin, end, range.begin(), range.end());
+}
+
+static void parseFile(Manager* man, File& fl, const std::string& filename) {
 	std::string path = getAbsolutePath(filename);
-	size_t size;
-	auto& lines = loadScript(path, size);
-
 	fl.path = path;
 
+	auto content = loadScript(path); // copy so we can strip comments in-place
+
+	for (size_t pos = 0; pos < content.length();) {
+		size_t location = content.find("//@"sv);
+		if (location == std::string::npos) {
+			break; // no more special comments
+		}
+		pos = location + 3;
+		if (location != 0) {
+			size_t whitespace_start = content.find_last_not_of(" \t"sv, location - 1);
+			if (whitespace_start != std::string::npos && content[whitespace_start] != '\n') {
+				continue; // not at line start
+			}
+		}
+		content.replace(location, 3, "   "sv);
+	}
+
+	std::string_view content_view = content;
+
 	std::string& output = fl.contents;
-	output.reserve(size);
+	output.reserve(content.length());
 
 	ManagerType curType = getManagerType(man);
 	ManagerType selType = curType;
 
-	reg_compile_lock.lock();
+
+	std::map<std::string, std::string> definitions = getDefaultDefines(curType);
+
+	/*reg_compile_lock.lock();
 	reg_compile(pre_include, "^[ \t]*#include[ \t]+\"(.+)\"[ \t]*");
 	reg_compile(pre_priority, "^[ \t]*#priority[ \t]+(.+)[ \t]+(.+)[ \t]*");
 	reg_compile(pre_section, "^[ \t]*#section[ \\t]+(.+)[ \t]*");
@@ -391,19 +464,40 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 	reg_compile(pre_import_all, "^[ \t]*import[ \t]+(([A-Za-z0-9._-]|, )+);");
 	reg_compile(pre_export, "^[ \t]*export[ \t]+(([A-Za-z0-9._-]|,* )+);");
 	reg_compile_lock.release();
-	reg_result match;
+	reg_result match;*/
 
+	size_t ifDepth = 0;
+	size_t trueIfDepth = 0;
+	bool previousBranchWasTrue = false;
 
-	for(auto iLine = lines.begin(), end = lines.end(); iLine != end; ++iLine) {
-		const std::string& line = *iLine;
-
-		auto lineStart = line.find_first_not_of(" \t");
-		if(lineStart == std::string::npos) {
-			output.append(1, '\n');
+	for (size_t pos = 0, line = 1; pos < content.length(); line++) {
+		size_t lineStart = content.find_first_not_of(" \t"sv, pos);
+		if (lineStart == std::string::npos) {
+			break;
+		}
+		if (content[lineStart] == '\n') {
+			output += '\n';
+			pos = lineStart + 1;
 			continue;
 		}
 
-		bool mayBeDirective = line[lineStart] == '#';
+		if (content[lineStart] == '#') {
+			size_t directiveStart = content.find_first_not_of(" \t"sv, lineStart + 1);
+			auto directiveView = content_view.substr(directiveStart);
+			auto directiveEnd = std::find_if_not(directiveView.begin(), directiveView.end(), isLowerAlpha);
+			auto directiveName = content_view.substr(1, directiveEnd - directiveView.begin());
+			if (directiveName == "if"sv) {
+			}
+		} else if (ifDepth > trueIfDepth) {
+			output += '\n';
+			size_t location = content.find_first_of('\n', pos);
+			if (location != std::string::npos) {
+				pos = location + 1;
+			}
+			continue;
+		}
+
+		/*bool mayBeDirective = line[lineStart] == '#';
 
 		if(mayBeDirective && reg_match(line, match, pre_section)) {
 			std::string type = trim(reg_str(line, match, 1));
@@ -586,7 +680,7 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 			if(!cacheFiles) {
 				std::string path = getAbsolutePath(includeFile);
 				File& incl = *new File();
-				parseFile(man, incl, includeFile, false);
+				parseFile(man, incl, includeFile);
 
 				fl.includes[path] = &incl;
 			}
@@ -608,6 +702,10 @@ void parseFile(Manager* man, File& fl, const std::string& filename, bool cacheFi
 		else {
 			output += line;
 			output.append(1,'\n');
+		}*/
+		size_t location = content.find_first_of('\n', pos);
+		if (location != std::string::npos) {
+			pos = location + 1;
 		}
 	}
 }
@@ -626,7 +724,7 @@ void Manager::load(const std::string& modulename, const std::string& filename) {
 	
 	File& fl = *new File();
 	fl.module = modulename;
-	parseFile(this, fl, filename, true);
+	parseFile(this, fl, filename);
 
 	files[path] = &fl;
 }
@@ -1096,7 +1194,7 @@ void reloadModule(Manager* man, Module& curMod) {
 
 	File& fl = *new File();
 	fl.module = module+"__reload";
-	parseFile(man, fl, filename, false);
+	parseFile(man, fl, filename);
 
 	//Build the module
 	Module& mod = *new Module();

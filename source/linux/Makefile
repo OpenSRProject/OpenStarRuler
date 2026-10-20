@@ -74,7 +74,7 @@ ifndef CXX
 	CXX = g++
 endif
 
-CXXFLAGS += -std=c++11 -Wno-c++14-extensions -Wno-c++17-extensions
+CXXFLAGS += -std=c++17
 CXXFLAGS += -DLIN_MODE -DGLIBCXX_USE_NANOSLEEP
 CXXFLAGS += -Wall -Wno-invalid-offsetof -Wno-switch -Wno-reorder
 CXXFLAGS += -Wno-unused-local-typedefs
