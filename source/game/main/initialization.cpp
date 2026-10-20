@@ -1340,15 +1340,15 @@ void destroyMod() {
 	//Clear shader state vars
 	clearShaderStateVars();
 
-	//Clear resources
-	devices.library.clear();
-	fsShader = nullptr;
-
 	//Clear menu scripts
 	delete devices.scripts.menu;
 	devices.scripts.menu = 0;
 	devices.engines.menu = 0;
 	scripts::resetContextCache(true);
+
+	//Clear resources
+	devices.library.clear();
+	fsShader = nullptr;
 
 	//Stop playing sounds
 	if(devices.sound)
